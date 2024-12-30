@@ -8,15 +8,17 @@ import { DataComparison } from "./DataComparison";
 import { ExportData } from "./ExportData";
 import { Search, Battery, Signal, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { useTranslation } from "react-i18next";
+import { useHiddenItems } from "@/hooks/useHiddenItems";
+import { RestoreButton } from "@/components/ui/restore-button";
 
 const SensorsPanel = () => {
   const [selectedCity, setSelectedCity] = useState<string>("gdansk");
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
   
+  const { hiddenItems, hideItem, restoreItems, isHidden } = useHiddenItems(`hidden-sensors-${selectedCity}`);
+
   const cities = Object.keys(sensorsData).map(key => 
     key.charAt(0).toUpperCase() + key.slice(1)
   );
@@ -27,10 +29,12 @@ const SensorsPanel = () => {
     setSelectedCity(city.toLowerCase());
   };
 
-  const filteredSensors = currentCityData.sensors.filter(sensor =>
-    sensor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    sensor.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const visibleSensors = currentCityData.sensors
+    .filter(sensor => !isHidden(sensor.name))
+    .filter(sensor =>
+      sensor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sensor.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const handleExport = async (format: 'jpg' | 'pdf' | 'xlsx' | 'csv') => {
     try {
@@ -56,7 +60,10 @@ const SensorsPanel = () => {
             pdf.save('czujniki.pdf');
           }
           break;
-        // ... keep existing code (xlsx and csv export logic)
+        case 'xlsx':
+        case 'csv':
+          // Implement xlsx and csv export logic here
+          break;
       }
     } catch (error) {
       console.error("Błąd eksportu:", error);
@@ -130,10 +137,17 @@ const SensorsPanel = () => {
           />
         </div>
 
+        <div className="flex justify-end mb-4">
+          <RestoreButton
+            onClick={restoreItems}
+            hiddenCount={currentCityData.sensors.length - visibleSensors.length}
+          />
+        </div>
+
         {currentCityData && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredSensors.map((sensor, index) => (
+              {visibleSensors.map((sensor, index) => (
                 <SensorCard 
                   key={index}
                   icon={sensor.icon}
@@ -142,6 +156,7 @@ const SensorsPanel = () => {
                   unit={sensor.unit}
                   status={sensor.status}
                   description={sensor.description}
+                  onHide={() => hideItem(sensor.name)}
                 />
               ))}
             </div>

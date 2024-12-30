@@ -2,16 +2,18 @@ import { FloatingChatbot } from "../FloatingChatbot";
 import { Card } from "@/components/ui/card";
 import { useCompanyStore } from "@/components/CompanySidebar";
 import { companiesData } from "@/data/companies";
+import { ChartCard } from "./ChartCard";
+import { useHiddenItems } from "@/hooks/useHiddenItems";
+import { RestoreButton } from "@/components/ui/restore-button";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,
+  BarChart, Bar, PieChart, Pie, Cell,
   Legend, Area, AreaChart, ComposedChart, Scatter,
 } from "recharts";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import * as XLSX from 'xlsx';
 import { UploadOptions } from "./UploadOptions";
 import { ExportButtons } from "./ExportButtons";
 
@@ -97,6 +99,111 @@ export function CompanyAnalysis() {
     }
   };
 
+  const { hiddenItems, hideItem, restoreItems, isHidden } = useHiddenItems('hidden-analysis-charts');
+
+  const charts = [
+    {
+      id: 'energy-trends',
+      title: 'Trendy zużycia energii',
+      component: (
+        <LineChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="consumption"
+            name="Zużycie"
+            stroke="#8884d8"
+            strokeWidth={2}
+          />
+          <Line
+            type="monotone"
+            dataKey="production"
+            name="Produkcja"
+            stroke="#82ca9d"
+            strokeWidth={2}
+          />
+        </LineChart>
+      )
+    },
+    {
+      id: 'efficiency-analysis',
+      title: 'Analiza wydajności',
+      component: (
+        <AreaChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Area
+            type="monotone"
+            dataKey="efficiency"
+            name="Wydajność"
+            stroke="#8884d8"
+            fill="#8884d8"
+          />
+        </AreaChart>
+      )
+    },
+    {
+      id: 'energy-sources',
+      title: 'Źródła energii',
+      component: (
+        <PieChart>
+          <Pie
+            data={[
+              { name: "Energia słoneczna", value: 30 },
+              { name: "Energia wiatrowa", value: 25 },
+              { name: "Biomasa", value: 20 },
+              { name: "Inne źródła", value: 25 },
+            ]}
+            cx="50%"
+            cy="50%"
+            outerRadius={100}
+            fill="#8884d8"
+            dataKey="value"
+            label
+          >
+            {[
+              { name: "Energia słoneczna", value: 30 },
+              { name: "Energia wiatrowa", value: 25 },
+              { name: "Biomasa", value: 20 },
+              { name: "Inne źródła", value: 25 },
+            ].map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      )
+    },
+    {
+      id: 'correlation-analysis',
+      title: 'Analiza korelacji',
+      component: (
+        <ComposedChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="consumption" name="Zużycie" fill="#8884d8" />
+          <Scatter dataKey="efficiency" name="Wydajność" fill="#82ca9d" />
+        </ComposedChart>
+      )
+    },
+  ];
+
+  const visibleCharts = charts.filter(chart => !isHidden(chart.id));
+
   return (
     <div className="relative">
       <div className="grid gap-6" id="company-analysis">
@@ -104,119 +211,29 @@ export function CompanyAnalysis() {
           <h2 className="text-2xl font-bold">
             Analiza - {selectedCompany?.name}
           </h2>
-          <ExportButtons 
-            onExport={handleExport}
-            onGenerateForecast={() => setShowForecast(true)}
-            showForecast={showForecast}
-          />
+          <div className="flex gap-2">
+            <RestoreButton
+              onClick={restoreItems}
+              hiddenCount={charts.length - visibleCharts.length}
+            />
+            <ExportButtons 
+              onExport={handleExport}
+              onGenerateForecast={() => setShowForecast(true)}
+              showForecast={showForecast}
+            />
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Trendy zużycia energii</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="consumption"
-                    name="Zużycie"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="production"
-                    name="Produkcja"
-                    stroke="#82ca9d"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Analiza wydajności</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="efficiency"
-                    name="Wydajność"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Źródła energii</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={[
-                      { name: "Energia słoneczna", value: 30 },
-                      { name: "Energia wiatrowa", value: 25 },
-                      { name: "Biomasa", value: 20 },
-                      { name: "Inne źródła", value: 25 },
-                    ]}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label
-                  >
-                    {[
-                      { name: "Energia słoneczna", value: 30 },
-                      { name: "Energia wiatrowa", value: 25 },
-                      { name: "Biomasa", value: 20 },
-                      { name: "Inne źródła", value: 25 },
-                    ].map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Analiza korelacji</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="consumption" name="Zużycie" fill="#8884d8" />
-                  <Scatter dataKey="efficiency" name="Wydajność" fill="#82ca9d" />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
+          {visibleCharts.map(chart => (
+            <ChartCard
+              key={chart.id}
+              title={chart.title}
+              onHide={() => hideItem(chart.id)}
+            >
+              {chart.component}
+            </ChartCard>
+          ))}
         </div>
 
         <UploadOptions />
