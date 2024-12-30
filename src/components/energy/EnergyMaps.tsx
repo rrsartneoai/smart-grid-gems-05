@@ -35,10 +35,16 @@ export function EnergyMaps() {
   const [mapReady, setMapReady] = useState(false);
   const { toast } = useToast();
 
-  // Set mapReady to true after component mount
+  // Initialize map only after component mount
   useEffect(() => {
-    setMapReady(true);
-    return () => setMapReady(false);
+    const timer = setTimeout(() => {
+      setMapReady(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      setMapReady(false);
+    };
   }, []);
 
   const { data: energyData, isLoading } = useQuery({
@@ -58,7 +64,8 @@ export function EnergyMaps() {
       try {
         const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
           headers: {
-            'auth-token': API_KEY
+            'auth-token': API_KEY,
+            'Content-Type': 'application/json'
           }
         });
 
@@ -118,13 +125,13 @@ export function EnergyMaps() {
           <LoadingSpinner />
         ) : (
           <div className="space-y-6">
-            <div className="h-[400px] relative bg-muted rounded-lg">
+            <div className="h-[400px] relative bg-muted rounded-lg overflow-hidden">
               {mapReady && (
                 <MapContainer
-                  key={mapReady ? "energy-map" : "loading"}
+                  key={mapReady.toString()}
                   center={[52.0689, 19.4803]}
                   zoom={6}
-                  style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                  style={{ height: '100%', width: '100%' }}
                   scrollWheelZoom={false}
                 >
                   <TileLayer
