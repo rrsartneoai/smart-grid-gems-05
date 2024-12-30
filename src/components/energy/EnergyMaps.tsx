@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import L from 'leaflet';
@@ -33,16 +33,21 @@ const timeRanges = [
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
   const [mapReady, setMapReady] = useState(false);
+  const mapRef = useRef<L.Map | null>(null);
   const { toast } = useToast();
 
-  // Initialize map only after component mount
   useEffect(() => {
+    // Delay map initialization to avoid render issues
     const timer = setTimeout(() => {
       setMapReady(true);
     }, 100);
 
     return () => {
       clearTimeout(timer);
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
       setMapReady(false);
     };
   }, []);
@@ -90,6 +95,7 @@ export function EnergyMaps() {
         throw error;
       }
     },
+    refetchOnWindowFocus: false,
     retry: false
   });
 
@@ -133,6 +139,7 @@ export function EnergyMaps() {
                   zoom={6}
                   style={{ height: '100%', width: '100%' }}
                   scrollWheelZoom={false}
+                  ref={mapRef}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
