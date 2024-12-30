@@ -7,6 +7,15 @@ import 'leaflet/dist/leaflet.css';
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+// Dynamically import MapContainer with no SSR to avoid render2 issues
+const Map = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), {
+  ssr: false,
+  loading: () => <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin" />
+  </div>
+});
 
 const API_KEY = 'VQAxrPWZJxPNH';
 const API_URL = 'https://api.electricitymap.org/v3';
@@ -53,7 +62,8 @@ export function EnergyMaps() {
         });
         
         if (!response.ok) {
-          throw new Error('Failed to fetch energy data');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch energy data');
         }
         
         const data = await response.json();
@@ -62,7 +72,7 @@ export function EnergyMaps() {
         console.error('Error fetching energy data:', error);
         toast({
           title: "Błąd",
-          description: "Nie udało się pobrać danych energetycznych",
+          description: error instanceof Error ? error.message : "Nie udało się pobrać danych energetycznych",
           variant: "destructive",
         });
         return null;
@@ -107,7 +117,7 @@ export function EnergyMaps() {
           <div className="space-y-6">
             {isMapMounted && (
               <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-                <MapContainer
+                <Map
                   center={[52.0689, 19.4803]}
                   zoom={6}
                   style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
@@ -117,7 +127,7 @@ export function EnergyMaps() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   />
-                </MapContainer>
+                </Map>
               </div>
             )}
 
