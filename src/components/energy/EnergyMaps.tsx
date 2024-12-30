@@ -55,12 +55,37 @@ export function EnergyMaps() {
     };
   }, []);
 
+  // Debug function to test API call
+  const testApiCall = async (apiKey: string) => {
+    console.log('Testing API call with key:', apiKey.substring(0, 4) + '...');
+    
+    try {
+      const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
+        headers: {
+          'auth-token': apiKey,
+        }
+      });
+      
+      console.log('API Response status:', response.status);
+      console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      
+      return { status: response.status, data };
+    } catch (error) {
+      console.error('API Test Error:', error);
+      return { status: 'error', error };
+    }
+  };
+
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
     queryFn: async () => {
       const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
       
       if (!API_KEY) {
+        console.error('API key is missing');
         toast({
           title: "Błąd konfiguracji",
           description: "Brak klucza API dla Electricity Map",
@@ -69,16 +94,28 @@ export function EnergyMaps() {
         throw new Error('API key is not configured');
       }
 
+      // Test API call before making the actual request
+      const testResult = await testApiCall(API_KEY);
+      if (testResult.status !== 200) {
+        console.error('API test failed:', testResult);
+        toast({
+          title: "Błąd API",
+          description: "Test połączenia z API nie powiódł się",
+          variant: "destructive",
+        });
+        throw new Error('API test failed');
+      }
+
       try {
         const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
           headers: {
             'auth-token': API_KEY,
-            'Content-Type': 'application/json'
           }
         });
 
         if (!response.ok) {
           const errorData = await response.json();
+          console.error('API Error Response:', errorData);
           toast({
             title: "Błąd API",
             description: errorData.error || "Nie udało się pobrać danych",
