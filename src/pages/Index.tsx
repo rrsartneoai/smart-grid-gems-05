@@ -1,9 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { EnergyChart } from "@/components/dashboard/EnergyChart";
 import { PowerStats } from "@/components/dashboard/PowerStats";
-import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { FileUpload } from "@/components/FileUpload";
-import { ApiKeySettings } from "@/components/settings/ApiKeySettings";
 import { CompanySidebar } from "@/components/CompanySidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,23 +14,29 @@ import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useEffect, useRef } from "react";
 import { FloatingChatbot } from "@/components/FloatingChatbot";
 import { Chatbot } from "@/components/Chatbot";
-import { NotificationCenter } from "@/components/ui/notifications/NotificationCenter";
-import { Tutorial } from "@/components/Tutorial";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useToast } from "@/hooks/use-toast";
-import { LanguageSelector } from "@/components/LanguageSelector";
 import EnergyMap from "@/components/map/EnergyMap";
 import { DeviceStatus } from "@/components/network/DeviceStatus";
 import { NetworkMap } from "@/components/network/NetworkMap";
 import { FailureAnalysis } from "@/components/network/FailureAnalysis";
 import { useTranslation } from 'react-i18next';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { ExperimentsPanel } from "@/components/experiments/ExperimentsPanel";
 import { KnowledgePanel } from "@/components/knowledge/KnowledgePanel";
+import { PageHeader } from "@/components/header/PageHeader";
 import '../i18n/config';
+
+// Add Montserrat font to all map containers
+const mapStyle = document.createElement('style');
+mapStyle.textContent = `
+  .leaflet-container {
+    font-family: 'Montserrat', sans-serif !important;
+  }
+`;
+document.head.appendChild(mapStyle);
 
 const Index = () => {
   const { toast } = useToast();
@@ -104,7 +108,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Tutorial />
       <motion.div 
         className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         style={{
@@ -112,33 +115,7 @@ const Index = () => {
           y: headerTranslateY
         }}
       >
-        <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-b">
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-4 sm:mb-0">
-            <ApiKeySettings />
-            <div className="flex flex-col items-center sm:items-start gap-1">
-              <h1 className="text-xl font-semibold text-center sm:text-left">
-                {t('monitoringPanel')}
-              </h1>
-              <p className="text-sm text-muted-foreground text-center sm:text-left">
-                {t('smartgridDescription')}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <LanguageSelector />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t('changeLanguage', 'Change language')}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <NotificationCenter />
-            <DarkModeToggle />
-          </div>
-        </div>
+        <PageHeader />
       </motion.div>
       
       <div className="pt-28">
@@ -256,4 +233,3 @@ const Index = () => {
 };
 
 export default Index;
-

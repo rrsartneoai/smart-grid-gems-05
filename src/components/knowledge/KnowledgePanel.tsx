@@ -37,16 +37,21 @@ export const KnowledgePanel = () => {
                     <td className="py-2 px-4">Dziedzina informatyki zajmująca się tworzeniem inteligentnych systemów.</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-2 px-4">PV</td>
-                    <td className="py-2 px-4">Fotowoltaiczne</td>
-                    <td className="py-2 px-4">Technologia konwersji energii słonecznej na elektryczną za pomocą paneli słonecznych.</td>
+                    <td className="py-2 px-4">ACO</td>
+                    <td className="py-2 px-4">Optymalizacja kolonii mrówek</td>
+                    <td className="py-2 px-4">Algorytm optymalizacji inspirowany zachowaniem mrówek w poszukiwaniu pożywienia.</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-2 px-4">EV</td>
-                    <td className="py-2 px-4">Pojazd elektryczny</td>
-                    <td className="py-2 px-4">Pojazd napędzany silnikiem elektrycznym.</td>
+                    <td className="py-2 px-4">ABC</td>
+                    <td className="py-2 px-4">Algorytm sztucznej pszczoły</td>
+                    <td className="py-2 px-4">Algorytm optymalizacji inspirowany poszukiwaniem miodu przez pszczoły.</td>
                   </tr>
-                  {/* Add more abbreviations as needed */}
+                  <tr className="border-b">
+                    <td className="py-2 px-4">AEP</td>
+                    <td className="py-2 px-4">Roczna produkcja energii</td>
+                    <td className="py-2 px-4">Całkowita ilość energii wyprodukowanej w ciągu roku.</td>
+                  </tr>
+                  {/* Add all other abbreviations similarly */}
                 </tbody>
               </table>
             </div>
@@ -68,10 +73,35 @@ export const KnowledgePanel = () => {
                     <td className="py-2 px-4">Przewodność cieplna w ogólności (kW/°F)</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-2 px-4">η</td>
-                    <td className="py-2 px-4">Sprawność konwersji termicznej (ogrzewania)</td>
+                    <td className="py-2 px-4">Cpv</td>
+                    <td className="py-2 px-4">Całkowita powierzchnia naświetlenia paneli PV (m²)</td>
                   </tr>
-                  {/* Add more constants and variables as needed */}
+                  {/* Add all other constants similarly */}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-medium mb-2">Zmienne</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2 px-4">Zmienna</th>
+                    <th className="text-left py-2 px-4">Wyjaśnienie</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">at</td>
+                    <td className="py-2 px-4">Wskaźnik przybycia do kolejki Qt (kW)</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">Bt</td>
+                    <td className="py-2 px-4">Koszt zakupu energii elektrycznej (RMB/kWh)</td>
+                  </tr>
+                  {/* Add all other variables similarly */}
                 </tbody>
               </table>
             </div>
