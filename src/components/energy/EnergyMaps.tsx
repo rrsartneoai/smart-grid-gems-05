@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import L from 'leaflet';
@@ -35,6 +35,9 @@ export function EnergyMaps() {
   const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<L.Map | null>(null);
   const { toast } = useToast();
+
+  // Memoize the map center coordinates
+  const mapCenter = useMemo(() => [52.0689, 19.4803], []);
 
   useEffect(() => {
     // Delay map initialization to avoid render issues
@@ -135,7 +138,7 @@ export function EnergyMaps() {
               {mapReady && (
                 <MapContainer
                   key={mapReady.toString()}
-                  center={[52.0689, 19.4803]}
+                  center={mapCenter as [number, number]}
                   zoom={6}
                   style={{ height: '100%', width: '100%' }}
                   scrollWheelZoom={false}
@@ -145,7 +148,7 @@ export function EnergyMaps() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   />
-                  <Marker position={[52.0689, 19.4803]}>
+                  <Marker position={mapCenter as [number, number]}>
                     <Popup>
                       Centrum Polski
                     </Popup>
