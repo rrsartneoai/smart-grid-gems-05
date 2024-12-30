@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -30,6 +30,12 @@ const timeRanges = [
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
   const { toast } = useToast();
+  const [mapReady, setMapReady] = useState(false);
+
+  useEffect(() => {
+    // Ensure the map container is ready before rendering
+    setMapReady(true);
+  }, []);
 
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
@@ -44,11 +50,11 @@ export function EnergyMaps() {
         });
         
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch energy data');
+          throw new Error('Failed to fetch energy data');
         }
         
-        return response.json();
+        const data = await response.json();
+        return data as EnergyData;
       } catch (error) {
         console.error('Error fetching energy data:', error);
         toast({
@@ -96,22 +102,23 @@ export function EnergyMaps() {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="h-[400px] relative">
-              <div className="absolute inset-0">
-                <MapContainer
-                  key="map-container"
-                  center={[52.0689, 19.4803]}
-                  zoom={6}
-                  className="h-full w-full rounded-lg"
-                  scrollWheelZoom={false}
-                >
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  />
-                </MapContainer>
+            {mapReady && (
+              <div className="h-[400px] relative">
+                <div className="absolute inset-0">
+                  <MapContainer
+                    center={[52.0689, 19.4803]}
+                    zoom={6}
+                    className="h-full w-full rounded-lg"
+                    scrollWheelZoom={false}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                  </MapContainer>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="h-[300px]">
