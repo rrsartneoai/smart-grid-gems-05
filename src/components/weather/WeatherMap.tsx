@@ -19,13 +19,23 @@ export const WeatherMap = () => {
 
     // Add OpenWeatherMap precipitation layer
     L.tileLayer(
-      `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=0716b08049f481eef218a1c51660a5e3`,
+      `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}`,
       {
         attribution: '© OpenWeatherMap',
         maxZoom: 18,
         opacity: 0.6
       }
     ).addTo(mapRef.current);
+
+    // Add zoom and move event listeners for debugging
+    mapRef.current.on('zoomend', () => {
+      console.log('Current zoom level:', mapRef.current?.getZoom());
+    });
+
+    mapRef.current.on('moveend', () => {
+      const center = mapRef.current?.getCenter();
+      console.log('Current center coordinates:', center?.lat, center?.lng);
+    });
 
     // Cleanup
     return () => {
