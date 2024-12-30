@@ -1,53 +1,53 @@
-import { PowerData, PowerForecast, ConsumptionForecast } from '@/types/electricity';
+import { toast } from "@/components/ui/use-toast";
 
-const BASE_URL = 'https://api.electricitymap.org/v3';
-
-export const fetchPowerData = async (lat: number, lon: number): Promise<PowerData> => {
-  const response = await fetch(
-    `${BASE_URL}/power-breakdown/latest?lat=${lat}&lon=${lon}`,
-    {
+export const testElectricityMapApi = async (apiKey: string) => {
+  console.log('Testing API call with key:', apiKey.substring(0, 4) + '...');
+  
+  try {
+    const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
       headers: {
-        'auth-token': localStorage.getItem('ELECTRICITY_MAPS_API_KEY') || ''
+        'auth-token': apiKey,
+        'Accept': 'application/json'
       }
-    }
-  );
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch power data');
+    });
+    
+    console.log('API Response status:', response.status);
+    console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
+    
+    const data = await response.json();
+    console.log('API Response data:', data);
+    
+    return { status: response.status, data };
+  } catch (error) {
+    console.error('API Test Error:', error);
+    return { status: 'error', error };
   }
-  
-  return response.json();
 };
 
-export const fetchPowerForecast = async (zone: string): Promise<PowerForecast> => {
-  const response = await fetch(
-    `${BASE_URL}/power-production-breakdown/forecast?zone=${zone}`,
-    {
-      headers: {
-        'auth-token': localStorage.getItem('ELECTRICITY_MAPS_API_KEY') || ''
-      }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch power forecast');
+export const fetchEnergyData = async (apiKey: string) => {
+  if (!apiKey) {
+    console.error('API key is missing');
+    throw new Error('API key is not configured');
   }
 
-  return response.json();
-};
+  // Test API call first
+  const testResult = await testElectricityMapApi(apiKey);
+  if (testResult.status !== 200) {
+    console.error('API test failed:', testResult);
+    throw new Error('API test failed');
+  }
 
-export const fetchConsumptionForecast = async (lat: number, lon: number): Promise<ConsumptionForecast> => {
-  const response = await fetch(
-    `${BASE_URL}/power-consumption-breakdown/forecast?lat=${lat}&lon=${lon}&horizonHours=24`,
-    {
-      headers: {
-        'auth-token': localStorage.getItem('ELECTRICITY_MAPS_API_KEY') || ''
-      }
+  const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
+    headers: {
+      'auth-token': apiKey,
+      'Accept': 'application/json'
     }
-  );
+  });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch consumption forecast');
+    const errorData = await response.json();
+    console.error('API Error Response:', errorData);
+    throw new Error(errorData.error || 'Failed to fetch energy data');
   }
 
   return response.json();
