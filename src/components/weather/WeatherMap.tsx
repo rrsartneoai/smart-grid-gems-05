@@ -47,12 +47,12 @@ export const WeatherMap = () => {
       "Temperatura": temperatureLayer
     };
 
-    L.control.layers(baseMaps, overlayMaps, {
+    new L.Control.Layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(mapRef.current);
 
     // Add legend
-    const legend = L.control({ position: 'bottomright' });
+    const legend = new L.Control({ position: 'bottomright' });
     legend.onAdd = () => {
       const div = L.DomUtil.create('div', 'info legend');
       div.innerHTML = `
@@ -83,7 +83,7 @@ export const WeatherMap = () => {
     legend.addTo(mapRef.current);
 
     // Add zoom controls
-    L.control.zoom({
+    new L.Control.Zoom({
       position: 'topright'
     }).addTo(mapRef.current);
 
