@@ -20,19 +20,61 @@ export const KnowledgePanel = () => {
           </section>
 
           <section>
-            <h3 className="text-lg font-medium mb-2">Jakość energii</h3>
-            <p className="text-muted-foreground">
-              Jakość energii elektrycznej określa się poprzez stabilność napięcia,
-              częstotliwość oraz brak zakłóceń w sieci.
-            </p>
+            <h3 className="text-lg font-medium mb-2">Nomenklatura</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2 px-4">Skrót</th>
+                    <th className="text-left py-2 px-4">Rozwinięcie</th>
+                    <th className="text-left py-2 px-4">Wyjaśnienie</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">AI</td>
+                    <td className="py-2 px-4">Sztuczna inteligencja</td>
+                    <td className="py-2 px-4">Dziedzina informatyki zajmująca się tworzeniem inteligentnych systemów.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">PV</td>
+                    <td className="py-2 px-4">Fotowoltaiczne</td>
+                    <td className="py-2 px-4">Technologia konwersji energii słonecznej na elektryczną za pomocą paneli słonecznych.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">EV</td>
+                    <td className="py-2 px-4">Pojazd elektryczny</td>
+                    <td className="py-2 px-4">Pojazd napędzany silnikiem elektrycznym.</td>
+                  </tr>
+                  {/* Add more abbreviations as needed */}
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section>
-            <h3 className="text-lg font-medium mb-2">Efektywność energetyczna</h3>
-            <p className="text-muted-foreground">
-              To stosunek uzyskanej energii użytecznej do energii dostarczonej.
-              Im wyższa efektywność, tym mniejsze straty energii.
-            </p>
+            <h3 className="text-lg font-medium mb-2">Stałe i zmienne</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2 px-4">Symbol</th>
+                    <th className="text-left py-2 px-4">Wyjaśnienie</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">A</td>
+                    <td className="py-2 px-4">Przewodność cieplna w ogólności (kW/°F)</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">η</td>
+                    <td className="py-2 px-4">Sprawność konwersji termicznej (ogrzewania)</td>
+                  </tr>
+                  {/* Add more constants and variables as needed */}
+                </tbody>
+              </table>
+            </div>
           </section>
         </div>
       </Card>

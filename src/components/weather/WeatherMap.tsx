@@ -19,7 +19,7 @@ export const WeatherMap = () => {
 
     // Add OpenWeatherMap precipitation layer
     L.tileLayer(
-      `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}`,
+      'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=' + import.meta.env.VITE_OPENWEATHER_API_KEY,
       {
         attribution: '© OpenWeatherMap',
         maxZoom: 18,

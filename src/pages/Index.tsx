@@ -179,13 +179,14 @@ const Index = () => {
                       </Button>
                     </div>
                     <div ref={spacesRef}>
-                      <DndContext collisionDetection={closestCenter}>
-                        <SortableContext items={[]} strategy={rectSortingStrategy}>
-                          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                            <PowerStats />
-                          </div>
-                        </SortableContext>
-                      </DndContext>
+
+<DndContext collisionDetection={closestCenter}>
+  <SortableContext items={[]} strategy={rectSortingStrategy}>
+    <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
+      <PowerStats />
+    </div>
+  </SortableContext>
+</DndContext>
 
                       <div className="grid gap-6 p-8">
                         <EnergyChart />
@@ -255,3 +256,4 @@ const Index = () => {
 };
 
 export default Index;
+
