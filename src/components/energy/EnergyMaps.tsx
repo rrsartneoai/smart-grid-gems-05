@@ -2,22 +2,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { TileLayer, MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useState, useEffect, Suspense, lazy } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import dynamic from 'next/dynamic';
 
-// Dynamically import MapContainer with no SSR to avoid render2 issues
-const Map = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), {
-  ssr: false,
-  loading: () => <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
-    <Loader2 className="h-8 w-8 animate-spin" />
-  </div>
-});
+// Lazy load the map component to avoid SSR issues
+const Map = lazy(() => import('react-leaflet').then(mod => ({
+  default: mod.MapContainer
+})));
 
-const API_KEY = 'VQAxrPWZJxPNH';
+const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY || 'YOUR_API_KEY';
 const API_URL = 'https://api.electricitymap.org/v3';
 
 interface EnergyData {
@@ -42,7 +38,6 @@ export function EnergyMaps() {
   const [isMapMounted, setIsMapMounted] = useState(false);
 
   useEffect(() => {
-    // Delay map mounting to ensure proper initialization
     const timer = setTimeout(() => {
       setIsMapMounted(true);
     }, 100);
@@ -86,6 +81,12 @@ export function EnergyMaps() {
     value: value
   })) : [];
 
+  const LoadingSpinner = () => (
+    <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
+  );
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -110,24 +111,24 @@ export function EnergyMaps() {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="flex justify-center items-center h-[400px]">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
+          <LoadingSpinner />
         ) : (
           <div className="space-y-6">
             {isMapMounted && (
               <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-                <Map
-                  center={[52.0689, 19.4803]}
-                  zoom={6}
-                  style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
-                  scrollWheelZoom={false}
-                >
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  />
-                </Map>
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Map
+                    center={[52.0689, 19.4803]}
+                    zoom={6}
+                    style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                    scrollWheelZoom={false}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                  </Map>
+                </Suspense>
               </div>
             )}
 
