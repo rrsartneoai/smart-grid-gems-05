@@ -10,7 +10,7 @@ import { getCompanyStatusData } from "./IoTStatusData";
 import { StatusCard } from "./StatusCard";
 import { useHiddenItems } from "@/hooks/useHiddenItems";
 import { RestoreButton } from "@/components/ui/restore-button";
-import { Activity, Clock, Battery, Signal, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { Activity, Clock, Battery, Signal, AlertTriangle, CheckCircle, XCircle, Cpu, Network, Database } from "lucide-react";
 
 export function IoTStatus() {
   const { t } = useTranslation();

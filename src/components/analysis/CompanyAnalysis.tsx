@@ -16,6 +16,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { UploadOptions } from "./UploadOptions";
 import { ExportButtons } from "./ExportButtons";
+import * as XLSX from 'xlsx';
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -242,3 +243,4 @@ export function CompanyAnalysis() {
     </div>
   );
 }
+

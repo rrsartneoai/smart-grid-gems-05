@@ -15,7 +15,7 @@ export const ChartCard = ({ title, children, onHide }: ChartCardProps) => {
       <h3 className="text-lg font-semibold mb-4">{title}</h3>
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          {children}
+          {children as React.ReactElement}
         </ResponsiveContainer>
       </div>
     </Card>
