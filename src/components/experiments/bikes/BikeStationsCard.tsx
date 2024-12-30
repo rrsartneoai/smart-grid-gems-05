@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BikeStationsMap } from "./BikeStationsMap";
-import { Bike, AlertTriangle, Search } from "lucide-react";
+import { Bike, AlertTriangle, Search, X, RefreshCw } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -26,12 +27,17 @@ interface Station {
 }
 
 const ITEMS_PER_PAGE = 15;
+const HIDDEN_STATIONS_KEY = 'hiddenStations';
 
 export const BikeStationsCard = () => {
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [hiddenStations, setHiddenStations] = useState<string[]>(() => {
+    const saved = localStorage.getItem(HIDDEN_STATIONS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -73,8 +79,14 @@ export const BikeStationsCard = () => {
     return () => clearInterval(interval);
   }, [toast]);
 
-  // Filter stations based on search query
+  // Save hidden stations to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(HIDDEN_STATIONS_KEY, JSON.stringify(hiddenStations));
+  }, [hiddenStations]);
+
+  // Filter stations based on search query and hidden status
   const filteredStations = stations.filter(station => {
+    if (hiddenStations.includes(station.station_id)) return false;
     if (searchQuery.length < 3) return true;
     return station.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
@@ -89,6 +101,22 @@ export const BikeStationsCard = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
+
+  const handleHideStation = (stationId: string) => {
+    setHiddenStations(prev => [...prev, stationId]);
+    toast({
+      title: "Stacja ukryta",
+      description: "Możesz ją przywrócić klikając przycisk 'Przywróć ukryte stacje'",
+    });
+  };
+
+  const handleRestoreStations = () => {
+    setHiddenStations([]);
+    toast({
+      title: "Stacje przywrócone",
+      description: "Wszystkie ukryte stacje zostały przywrócone",
+    });
+  };
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -125,23 +153,44 @@ export const BikeStationsCard = () => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="flex items-center gap-2 relative">
-            <Search className="h-4 w-4 absolute left-3 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Wyszukaj stację (min. 3 znaki)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Wyszukaj stację (min. 3 znaki)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            {hiddenStations.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRestoreStations}
+                className="whitespace-nowrap"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Przywróć ukryte stacje ({hiddenStations.length})
+              </Button>
+            )}
           </div>
           
           <BikeStationsMap stations={filteredStations} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {currentStations.map((station) => (
-              <Card key={station.station_id} className="p-4">
-                <h3 className="font-semibold mb-2">{station.name}</h3>
+              <Card key={station.station_id} className="p-4 relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-2 h-6 w-6"
+                  onClick={() => handleHideStation(station.station_id)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+                <h3 className="font-semibold mb-2 pr-8">{station.name}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{station.address}</p>
                 <div className="flex justify-between text-sm">
                   <span>Dostępne rowery: {station.num_bikes_available}</span>
