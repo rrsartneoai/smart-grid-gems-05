@@ -4,9 +4,21 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { SensorCard } from "./SensorCard";
 
+type SensorStatus = "Good" | "Warning";
+
+interface Sensor {
+  id: number;
+  name: string;
+  value: string;
+  unit: string;
+  status: SensorStatus;
+  description: string;
+  icon: React.ReactNode;
+}
+
 const SensorsPanel = () => {
   const { t } = useTranslation();
-  const [sensors, setSensors] = useState([
+  const [sensors, setSensors] = useState<Sensor[]>([
     {
       id: 1,
       name: "Czujnik temperatury",
