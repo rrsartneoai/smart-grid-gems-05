@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { LineChart, BarChart2 } from "lucide-react";
+import { LineChart, BarChart2, ZoomIn } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ChartControlsProps {
