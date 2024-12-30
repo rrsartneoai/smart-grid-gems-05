@@ -26,8 +26,8 @@ export const EnergyMap = ({ center, zoom }: EnergyMapProps) => {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(mapRef.current);
 
-      // Add a polygon for Poland's borders
-      const polandCoordinates = [
+      // Add a polygon for Poland's borders with proper LatLngExpression type
+      const polandCoordinates: L.LatLngExpression[] = [
         [54.8, 18.0], // Northwest
         [54.3, 19.6], // Northeast
         [51.2, 24.1], // East
