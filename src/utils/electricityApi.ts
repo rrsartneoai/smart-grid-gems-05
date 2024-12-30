@@ -1,5 +1,3 @@
-import { PowerData, PowerForecast, ConsumptionForecast } from '@/types/electricity';
-
 const API_BASE_URL = 'https://api.electricitymap.org/v3';
 
 const getApiKey = () => {
@@ -55,7 +53,7 @@ export const fetchEnergyData = async (apiKey: string) => {
   }
 };
 
-export const fetchPowerData = async (lat: number, lon: number): Promise<PowerData> => {
+export const fetchPowerData = async (lat: number, lon: number) => {
   const apiKey = getApiKey();
   const headers = createHeaders(apiKey);
 
@@ -81,7 +79,7 @@ export const fetchPowerData = async (lat: number, lon: number): Promise<PowerDat
   }
 };
 
-export const fetchPowerForecast = async (zoneId: string): Promise<PowerForecast> => {
+export const fetchPowerForecast = async (zoneId: string) => {
   const apiKey = getApiKey();
   const headers = createHeaders(apiKey);
 
@@ -107,7 +105,7 @@ export const fetchPowerForecast = async (zoneId: string): Promise<PowerForecast>
   }
 };
 
-export const fetchConsumptionForecast = async (lat: number, lon: number): Promise<ConsumptionForecast> => {
+export const fetchConsumptionForecast = async (lat: number, lon: number) => {
   const apiKey = getApiKey();
   const headers = createHeaders(apiKey);
 
