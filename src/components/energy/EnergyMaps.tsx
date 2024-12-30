@@ -2,10 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -38,10 +37,16 @@ export function EnergyMaps() {
       try {
         const response = await fetch(`${API_URL}/power-breakdown/PL`, {
           headers: {
-            'auth-token': API_KEY
+            'auth-token': API_KEY,
+            'Accept': 'application/json'
           }
         });
-        if (!response.ok) throw new Error('Failed to fetch energy data');
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch energy data');
+        }
+        
         return response.json();
       } catch (error) {
         console.error('Error fetching energy data:', error);
@@ -92,9 +97,11 @@ export function EnergyMaps() {
           <div className="space-y-6">
             <div className="h-[400px] relative">
               <MapContainer
+                key="map-container"
                 center={[52.0689, 19.4803]}
                 zoom={6}
                 className="h-full w-full rounded-lg"
+                scrollWheelZoom={false}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
