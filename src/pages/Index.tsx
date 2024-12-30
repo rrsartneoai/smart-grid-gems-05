@@ -27,6 +27,7 @@ import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { ExperimentsPanel } from "@/components/experiments/ExperimentsPanel";
 import { KnowledgePanel } from "@/components/knowledge/KnowledgePanel";
 import { PageHeader } from "@/components/header/PageHeader";
+import { EnergyMaps } from "@/components/energy/EnergyMaps"; // Import the new EnergyMaps component
 import '../i18n/config';
 
 // Add Montserrat font to all map containers
@@ -219,7 +220,10 @@ const Index = () => {
                   </TabsContent>
 
                   <TabsContent value="knowledge">
-                    <KnowledgePanel />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <KnowledgePanel />
+                      <EnergyMaps /> {/* Include the new EnergyMaps component */}
+                    </div>
                   </TabsContent>
                 </Tabs>
               </motion.div>
