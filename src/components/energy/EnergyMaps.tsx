@@ -35,8 +35,10 @@ export function EnergyMaps() {
   const [mapReady, setMapReady] = useState(false);
   const { toast } = useToast();
 
+  // Set mapReady to true after component mount
   useEffect(() => {
     setMapReady(true);
+    return () => setMapReady(false);
   }, []);
 
   const { data: energyData, isLoading } = useQuery({
@@ -53,23 +55,33 @@ export function EnergyMaps() {
         throw new Error('API key is not configured');
       }
 
-      const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
-        headers: {
-          'auth-token': API_KEY
-        }
-      });
+      try {
+        const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
+          headers: {
+            'auth-token': API_KEY
+          }
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
+        if (!response.ok) {
+          const errorData = await response.json();
+          toast({
+            title: "Błąd API",
+            description: errorData.error || "Nie udało się pobrać danych",
+            variant: "destructive",
+          });
+          throw new Error(errorData.error || 'Failed to fetch energy data');
+        }
+
+        return response.json();
+      } catch (error) {
+        console.error('API Error:', error);
         toast({
-          title: "Błąd API",
-          description: errorData.error || "Nie udało się pobrać danych",
+          title: "Błąd połączenia",
+          description: "Nie udało się połączyć z API",
           variant: "destructive",
         });
-        throw new Error(errorData.error || 'Failed to fetch energy data');
+        throw error;
       }
-
-      return response.json();
     },
     retry: false
   });
@@ -106,10 +118,10 @@ export function EnergyMaps() {
           <LoadingSpinner />
         ) : (
           <div className="space-y-6">
-            <div className="h-[400px] relative">
+            <div className="h-[400px] relative bg-muted rounded-lg">
               {mapReady && (
                 <MapContainer
-                  key="energy-map"
+                  key={mapReady ? "energy-map" : "loading"}
                   center={[52.0689, 19.4803]}
                   zoom={6}
                   style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
