@@ -38,7 +38,8 @@ export function EnergyMaps() {
         const response = await fetch(`${API_URL}/power-breakdown/PL`, {
           headers: {
             'auth-token': API_KEY,
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
           }
         });
         
@@ -96,18 +97,20 @@ export function EnergyMaps() {
         ) : (
           <div className="space-y-6">
             <div className="h-[400px] relative">
-              <MapContainer
-                key="map-container"
-                center={[52.0689, 19.4803]}
-                zoom={6}
-                className="h-full w-full rounded-lg"
-                scrollWheelZoom={false}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-              </MapContainer>
+              <div className="absolute inset-0">
+                <MapContainer
+                  key="map-container"
+                  center={[52.0689, 19.4803]}
+                  zoom={6}
+                  className="h-full w-full rounded-lg"
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                </MapContainer>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
