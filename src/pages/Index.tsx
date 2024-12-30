@@ -31,6 +31,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { ExperimentsPanel } from "@/components/experiments/ExperimentsPanel";
+import { KnowledgePanel } from "@/components/knowledge/KnowledgePanel";
 import '../i18n/config';
 
 const Index = () => {
@@ -159,6 +160,7 @@ const Index = () => {
                     <TabsTrigger value="sensors">{t('sensors')}</TabsTrigger>
                     <TabsTrigger value="integrations">Integracje</TabsTrigger>
                     <TabsTrigger value="experiments">Eksperymenty</TabsTrigger>
+                    <TabsTrigger value="knowledge">Kompendium</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="spaces" className="space-y-6">
@@ -236,6 +238,10 @@ const Index = () => {
 
                   <TabsContent value="experiments">
                     <ExperimentsPanel />
+                  </TabsContent>
+
+                  <TabsContent value="knowledge">
+                    <KnowledgePanel />
                   </TabsContent>
                 </Tabs>
               </motion.div>

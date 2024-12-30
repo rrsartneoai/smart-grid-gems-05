@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 interface ProgressItemProps {
   label: string;
   value: number;
-  icon: React.ComponentType;
+  icon: React.ComponentType<{ className?: string }>;
   description: string;
   onClick: () => void;
 }
