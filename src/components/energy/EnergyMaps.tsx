@@ -37,36 +37,36 @@ export function EnergyMaps() {
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
     queryFn: async () => {
-      try {
-        const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
-        if (!API_KEY) {
-          throw new Error('API key is not configured');
-        }
-
-        const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
-          headers: {
-            'auth-token': API_KEY,
-          }
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch energy data');
-        }
-        
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Error fetching energy data:', error);
+      const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+      
+      if (!API_KEY) {
         toast({
-          title: "Błąd",
-          description: error instanceof Error ? error.message : "Nie udało się pobrać danych energetycznych",
+          title: "Błąd konfiguracji",
+          description: "Brak klucza API dla Electricity Map",
           variant: "destructive",
         });
-        return null;
+        throw new Error('API key is not configured');
       }
+
+      const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
+        headers: {
+          'auth-token': API_KEY
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast({
+          title: "Błąd API",
+          description: errorData.error || "Nie udało się pobrać danych",
+          variant: "destructive",
+        });
+        throw new Error(errorData.error || 'Failed to fetch energy data');
+      }
+
+      return response.json();
     },
-    refetchInterval: 300000, // 5 minutes
+    retry: false
   });
 
   const productionData = energyData?.production ? Object.entries(energyData.production).map(([source, value]) => ({
