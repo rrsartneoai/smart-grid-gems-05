@@ -2,11 +2,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect, Suspense } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import L from 'leaflet';
+
+// Fix Leaflet default icon issue
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const LoadingSpinner = () => (
   <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
@@ -24,25 +33,19 @@ const timeRanges = [
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
   const { toast } = useToast();
-  const [isMapMounted, setIsMapMounted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsMapMounted(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
     queryFn: async () => {
       try {
         const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+        if (!API_KEY) {
+          throw new Error('API key is not configured');
+        }
+
         const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
           headers: {
             'auth-token': API_KEY,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
           }
         });
         
@@ -98,23 +101,25 @@ export function EnergyMaps() {
           <LoadingSpinner />
         ) : (
           <div className="space-y-6">
-            {isMapMounted && (
-              <Suspense fallback={<LoadingSpinner />}>
-                <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-                  <MapContainer
-                    center={[52.0689, 19.4803]}
-                    zoom={6}
-                    style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                  </MapContainer>
-                </div>
-              </Suspense>
-            )}
+            <div className="h-[400px] relative">
+              <MapContainer
+                key="energy-map"
+                center={[52.0689, 19.4803]}
+                zoom={6}
+                style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <Marker position={[52.0689, 19.4803]}>
+                  <Popup>
+                    Centrum Polski
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="h-[300px]">
