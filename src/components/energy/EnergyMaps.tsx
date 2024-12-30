@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import L from 'leaflet';
@@ -32,7 +32,12 @@ const timeRanges = [
 
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
+  const [mapReady, setMapReady] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setMapReady(true);
+  }, []);
 
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
@@ -102,23 +107,25 @@ export function EnergyMaps() {
         ) : (
           <div className="space-y-6">
             <div className="h-[400px] relative">
-              <MapContainer
-                key="energy-map"
-                center={[52.0689, 19.4803]}
-                zoom={6}
-                style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
-                scrollWheelZoom={false}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={[52.0689, 19.4803]}>
-                  <Popup>
-                    Centrum Polski
-                  </Popup>
-                </Marker>
-              </MapContainer>
+              {mapReady && (
+                <MapContainer
+                  key="energy-map"
+                  center={[52.0689, 19.4803]}
+                  zoom={6}
+                  style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <Marker position={[52.0689, 19.4803]}>
+                    <Popup>
+                      Centrum Polski
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
