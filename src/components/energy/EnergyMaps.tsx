@@ -24,17 +24,23 @@ const timeRanges = [
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
   const { toast } = useToast();
-
-  // Memoize the map center coordinates
   const mapCenter = useMemo(() => [52.0689, 19.4803] as [number, number], []);
 
   const { data: energyData, isLoading } = useQuery({
     queryKey: ['energy-data', selectedRange],
     queryFn: async () => {
       const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+      if (!API_KEY) {
+        throw new Error('API key is not configured');
+      }
       
       try {
-        return await fetchEnergyData(API_KEY);
+        const data = await fetchEnergyData(API_KEY);
+        return {
+          production: data.production,
+          carbonIntensity: data.carbonIntensity,
+          renewablePercentage: data.renewablePercentage
+        };
       } catch (error) {
         toast({
           title: "Błąd API",
@@ -48,10 +54,13 @@ export function EnergyMaps() {
     retry: false
   });
 
-  const productionData = energyData?.production ? Object.entries(energyData.production).map(([source, value]) => ({
-    name: source,
-    value: value
-  })) : [];
+  const productionData = useMemo(() => {
+    if (!energyData?.production) return [];
+    return Object.entries(energyData.production).map(([source, value]) => ({
+      name: source,
+      value: typeof value === 'number' ? value : 0
+    }));
+  }, [energyData?.production]);
 
   return (
     <Card className="w-full">

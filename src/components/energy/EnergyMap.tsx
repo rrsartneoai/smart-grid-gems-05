@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -18,35 +17,32 @@ interface EnergyMapProps {
 
 export const EnergyMap = ({ center, zoom }: EnergyMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (containerRef.current && !mapRef.current) {
+      mapRef.current = L.map(containerRef.current).setView(center, zoom);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mapRef.current);
+
+      L.marker(center).addTo(mapRef.current)
+        .bindPopup('Centrum Polski')
+        .openPopup();
+    }
+
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [center, zoom]);
 
   return (
     <div className="h-[400px] relative bg-muted rounded-lg overflow-hidden">
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        style={{ height: '100%', width: '100%' }}
-        scrollWheelZoom={false}
-        ref={mapRef}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <Marker position={center}>
-          <Popup>
-            Centrum Polski
-          </Popup>
-        </Marker>
-      </MapContainer>
+      <div ref={containerRef} className="h-full w-full" />
     </div>
   );
 };
