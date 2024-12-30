@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BikeStationsMap } from "./BikeStationsMap";
-import { Bike, AlertTriangle } from "lucide-react";
+import { Bike, AlertTriangle, Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -30,6 +31,7 @@ export const BikeStationsCard = () => {
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -71,11 +73,22 @@ export const BikeStationsCard = () => {
     return () => clearInterval(interval);
   }, [toast]);
 
+  // Filter stations based on search query
+  const filteredStations = stations.filter(station => {
+    if (searchQuery.length < 3) return true;
+    return station.name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
   // Calculate pagination values
-  const totalPages = Math.ceil(stations.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredStations.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentStations = stations.slice(startIndex, endIndex);
+  const currentStations = filteredStations.slice(startIndex, endIndex);
+
+  // Reset to first page when search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -112,7 +125,19 @@ export const BikeStationsCard = () => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <BikeStationsMap stations={stations} />
+          <div className="flex items-center gap-2 relative">
+            <Search className="h-4 w-4 absolute left-3 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Wyszukaj stację (min. 3 znaki)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          
+          <BikeStationsMap stations={filteredStations} />
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {currentStations.map((station) => (
               <Card key={station.station_id} className="p-4">
@@ -125,6 +150,7 @@ export const BikeStationsCard = () => {
               </Card>
             ))}
           </div>
+
           {totalPages > 1 && (
             <Pagination className="mt-4">
               <PaginationContent>
