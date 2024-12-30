@@ -4,26 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { TileLayer, MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect, Suspense, lazy } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-// Lazy load the map component to avoid SSR issues
-const Map = lazy(() => import('react-leaflet').then(mod => ({
-  default: mod.MapContainer
-})));
-
-const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY || 'YOUR_API_KEY';
-const API_URL = 'https://api.electricitymap.org/v3';
-
-interface EnergyData {
-  carbonIntensity: number;
-  fossilFuelPercentage: number;
-  renewablePercentage: number;
-  production: {
-    [key: string]: number;
-  };
-}
+const LoadingSpinner = () => (
+  <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin" />
+  </div>
+);
 
 const timeRanges = [
   { id: '24h', label: '24 godziny' },
@@ -48,7 +37,8 @@ export function EnergyMaps() {
     queryKey: ['energy-data', selectedRange],
     queryFn: async () => {
       try {
-        const response = await fetch(`${API_URL}/power-breakdown/PL`, {
+        const API_KEY = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+        const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
           headers: {
             'auth-token': API_KEY,
             'Accept': 'application/json',
@@ -62,7 +52,7 @@ export function EnergyMaps() {
         }
         
         const data = await response.json();
-        return data as EnergyData;
+        return data;
       } catch (error) {
         console.error('Error fetching energy data:', error);
         toast({
@@ -80,12 +70,6 @@ export function EnergyMaps() {
     name: source,
     value: value
   })) : [];
-
-  const LoadingSpinner = () => (
-    <div className="h-[400px] w-full bg-muted rounded-lg flex items-center justify-center">
-      <Loader2 className="h-8 w-8 animate-spin" />
-    </div>
-  );
 
   return (
     <Card className="w-full">
@@ -117,7 +101,7 @@ export function EnergyMaps() {
             {isMapMounted && (
               <div style={{ height: '400px', width: '100%', position: 'relative' }}>
                 <Suspense fallback={<LoadingSpinner />}>
-                  <Map
+                  <MapContainer
                     center={[52.0689, 19.4803]}
                     zoom={6}
                     style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
@@ -127,7 +111,7 @@ export function EnergyMaps() {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                  </Map>
+                  </MapContainer>
                 </Suspense>
               </div>
             )}
