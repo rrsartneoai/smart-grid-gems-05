@@ -30,11 +30,14 @@ const timeRanges = [
 export function EnergyMaps() {
   const [selectedRange, setSelectedRange] = useState('24h');
   const { toast } = useToast();
-  const [mapReady, setMapReady] = useState(false);
+  const [isMapMounted, setIsMapMounted] = useState(false);
 
   useEffect(() => {
-    // Ensure the map container is ready before rendering
-    setMapReady(true);
+    // Delay map mounting to ensure proper initialization
+    const timer = setTimeout(() => {
+      setIsMapMounted(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const { data: energyData, isLoading } = useQuery({
@@ -102,21 +105,19 @@ export function EnergyMaps() {
           </div>
         ) : (
           <div className="space-y-6">
-            {mapReady && (
-              <div className="h-[400px] relative">
-                <div className="absolute inset-0">
-                  <MapContainer
-                    center={[52.0689, 19.4803]}
-                    zoom={6}
-                    className="h-full w-full rounded-lg"
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                  </MapContainer>
-                </div>
+            {isMapMounted && (
+              <div style={{ height: '400px', width: '100%', position: 'relative' }}>
+                <MapContainer
+                  center={[52.0689, 19.4803]}
+                  zoom={6}
+                  style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                </MapContainer>
               </div>
             )}
 
