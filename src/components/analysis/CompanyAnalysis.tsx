@@ -11,23 +11,26 @@ import {
   Legend, Area, AreaChart, ComposedChart, Scatter,
 } from "recharts";
 import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { UploadOptions } from "./UploadOptions";
 import { ExportButtons } from "./ExportButtons";
 import * as XLSX from 'xlsx';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const calculateForecast = (data: any[]) => {
-  const forecast = data.map((item, index) => ({
+  if (!data || data.length === 0) return [];
+  
+  return data.map((item, index) => ({
     name: `Forecast ${index + 1}`,
     consumption: item.consumption * 1.1,
     production: item.production * 1.15,
     efficiency: Math.min(item.efficiency * 1.05, 100),
   }));
-  return forecast;
 };
 
 export function CompanyAnalysis() {
@@ -37,6 +40,16 @@ export function CompanyAnalysis() {
     (company) => company.id === selectedCompanyId
   );
   const [showForecast, setShowForecast] = useState(false);
+
+  useEffect(() => {
+    if (!selectedCompany) {
+      toast({
+        title: "Brak wybranej firmy",
+        description: "Wybierz firmę z menu bocznego, aby zobaczyć analizę.",
+        variant: "destructive"
+      });
+    }
+  }, [selectedCompany, toast]);
 
   const handleExport = async (format: 'pdf' | 'jpg' | 'xlsx' | 'csv') => {
     try {
@@ -102,12 +115,40 @@ export function CompanyAnalysis() {
 
   const { hiddenItems, hideItem, restoreItems, isHidden } = useHiddenItems('hidden-analysis-charts');
 
+  if (!selectedCompanyId) {
+    return (
+      <Card className="p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Brak wybranej firmy</AlertTitle>
+          <AlertDescription>
+            Wybierz firmę z menu bocznego, aby zobaczyć analizę danych.
+          </AlertDescription>
+        </Alert>
+      </Card>
+    );
+  }
+
+  if (!selectedCompany?.energyData) {
+    return (
+      <Card className="p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Brak danych</AlertTitle>
+          <AlertDescription>
+            Nie znaleziono danych dla wybranej firmy. Sprawdź połączenie z bazą danych.
+          </AlertDescription>
+        </Alert>
+      </Card>
+    );
+  }
+
   const charts = [
     {
       id: 'energy-trends',
       title: 'Trendy zużycia energii',
       component: (
-        <LineChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+        <LineChart data={showForecast ? [...selectedCompany.energyData, ...calculateForecast(selectedCompany.energyData)] : selectedCompany.energyData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -243,4 +284,3 @@ export function CompanyAnalysis() {
     </div>
   );
 }
-
