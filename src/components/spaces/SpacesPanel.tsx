@@ -14,14 +14,11 @@ import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useToast } from "@/hooks/use-toast";
-import { useHiddenItems } from "@/hooks/useHiddenItems";
-import { Eye } from "lucide-react";
 
 export const SpacesPanel = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const spacesRef = useRef<HTMLDivElement>(null);
-  const { restoreItems, hiddenItems } = useHiddenItems('hidden-spaces');
 
   const handleExport = async (format: 'pdf' | 'jpg') => {
     if (!spacesRef.current) return;
@@ -67,12 +64,6 @@ export const SpacesPanel = () => {
   return (
     <div>
       <div className="flex justify-end gap-2 mb-4">
-        {hiddenItems.length > 0 && (
-          <Button variant="outline" onClick={restoreItems} className="flex items-center gap-2">
-            <Eye className="h-4 w-4" />
-            Przywróć ukryte ({hiddenItems.length})
-          </Button>
-        )}
         <Button variant="outline" onClick={() => handleExport('jpg')}>
           Eksportuj do JPG
         </Button>
@@ -84,7 +75,7 @@ export const SpacesPanel = () => {
       <div ref={spacesRef}>
         <DndContext collisionDetection={closestCenter}>
           <SortableContext items={[]} strategy={rectSortingStrategy}>
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <PowerStats />
             </div>
           </SortableContext>
@@ -94,7 +85,7 @@ export const SpacesPanel = () => {
           <EnergyChart />
         </div>
 
-        <div className="grid gap-6 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
           <DeviceStatus />
         </div>
 

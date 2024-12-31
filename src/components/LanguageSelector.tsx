@@ -43,8 +43,10 @@ export function LanguageSelector() {
     <div className="flex items-center gap-2">
       <Globe className="h-5 w-5 text-primary animate-spin" style={{ animationDuration: '3s' }} />
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent">
-          <Languages className="h-4 w-4" />
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <Languages className="h-4 w-4" />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {languages.map((lang) => (

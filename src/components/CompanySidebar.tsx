@@ -139,43 +139,33 @@ function SidebarContent({
 
   return (
     <div className="flex h-full flex-col gap-4">
-      <div className={`${collapsed ? 'p-2' : 'p-6'} relative`}>
-        {!collapsed && (
-          <>
-            <h2 className="text-lg font-semibold">Firmy</h2>
-            <p className="text-sm text-muted-foreground">
-              Wybierz firmę do monitorowania
-            </p>
-            <div className="mt-4 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Szukaj firm..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-          </>
-        )}
-      </div>
+      {!collapsed && (
+        <div className="p-6">
+          <h2 className="text-lg font-semibold">Firmy</h2>
+          <p className="text-sm text-muted-foreground">
+            Wybierz firmę do monitorowania
+          </p>
+          <div className="mt-4 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Szukaj firm..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
+      )}
       <ScrollArea className="flex-1">
         <div className="space-y-4 p-4">
           {filteredCompanies.map((company) => (
             <div key={company.id} className="space-y-4">
               <Button
                 variant="outline"
-                className={`w-full flex items-center justify-between ${
-                  collapsed ? 'p-2' : ''
-                }`}
+                className="w-full flex items-center justify-between"
                 onClick={() => setSelectedCompanyId(company.id)}
               >
-                {collapsed ? (
-                  <span className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full">
-                    {company.name.charAt(0)}
-                  </span>
-                ) : (
-                  <span>{company.name}</span>
-                )}
+                <span>{company.name}</span>
               </Button>
             </div>
           ))}
@@ -189,9 +179,9 @@ function SidebarContent({
           </Button>
           <Button
             variant="outline"
-            className={`mt-2 ${
-              collapsed ? "w-10 p-2" : "w-full"
-            } bg-[#00A36C] text-white`}
+            className={`mt-2 rounded ${
+    collapsed ? "w-10 p-2 bg-gray-100" : "w-full bg-[#00A36C]" // Changed background color here
+  } text-white`}
             onClick={() => navigate('/assistant')}
           >
             <MessageSquare className="w-4 h-4" />
