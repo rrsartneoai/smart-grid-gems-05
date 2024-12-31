@@ -5,22 +5,13 @@ import { companiesData } from "@/data/companies";
 import { ChartCard } from "./ChartCard";
 import { useHiddenItems } from "@/hooks/useHiddenItems";
 import { RestoreButton } from "@/components/ui/restore-button";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  BarChart, Bar, PieChart, Pie, Cell,
-  Legend, Area, AreaChart, ComposedChart, Scatter,
-} from "recharts";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { UploadOptions } from "./UploadOptions";
-import { ExportButtons } from "./ExportButtons";
-import * as XLSX from 'xlsx';
+import { EnergyTrendsChart } from './charts/EnergyTrendsChart';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+import { UploadOptions } from "./UploadOptions";
+import { ExportButtons } from "./ExportButtons";
 
 const calculateForecast = (data: any[]) => {
   if (!data || data.length === 0) return [];
@@ -148,27 +139,12 @@ export function CompanyAnalysis() {
       id: 'energy-trends',
       title: 'Trendy zużycia energii',
       component: (
-        <LineChart data={showForecast ? [...selectedCompany.energyData, ...calculateForecast(selectedCompany.energyData)] : selectedCompany.energyData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="consumption"
-            name="Zużycie"
-            stroke="#8884d8"
-            strokeWidth={2}
-          />
-          <Line
-            type="monotone"
-            dataKey="production"
-            name="Produkcja"
-            stroke="#82ca9d"
-            strokeWidth={2}
-          />
-        </LineChart>
+        <EnergyTrendsChart 
+          data={showForecast ? 
+            [...selectedCompany.energyData, ...calculateForecast(selectedCompany.energyData)] : 
+            selectedCompany.energyData
+          }
+        />
       )
     },
     {
