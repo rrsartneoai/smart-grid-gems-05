@@ -12,7 +12,6 @@ const initialSensors = [
     unit: "°C",
     status: "Good",
     description: "Temperatura w normie.",
-    tooltip: "Mierzy temperaturę otoczenia w stopniach Celsjusza. Wartości między 20-25°C są optymalne dla większości pomieszczeń.",
     icon: <span>🌡️</span>,
   },
   {
@@ -22,7 +21,6 @@ const initialSensors = [
     unit: "%",
     status: "Good",
     description: "Wilgotność w normie.",
-    tooltip: "Monitoruje poziom wilgotności względnej w powietrzu. Optymalna wilgotność mieści się w zakresie 40-60%.",
     icon: <span>💧</span>,
   },
   {
@@ -32,7 +30,6 @@ const initialSensors = [
     unit: "AQI",
     status: "Warning",
     description: "Jakość powietrza poniżej normy.",
-    tooltip: "Mierzy jakość powietrza według indeksu AQI. Wartości poniżej 50 oznaczają dobrą jakość powietrza.",
     icon: <span>🌫️</span>,
   },
   {
@@ -42,7 +39,6 @@ const initialSensors = [
     unit: "V",
     status: "Good",
     description: "Napięcie w sieci stabilne.",
-    tooltip: "Monitoruje napięcie w sieci elektrycznej. Standardowe napięcie w Polsce to 230V ±10%.",
     icon: <span>⚡</span>,
   },
   {
@@ -52,7 +48,6 @@ const initialSensors = [
     unit: "A",
     status: "Good",
     description: "Natężenie prądu w normie.",
-    tooltip: "Mierzy natężenie prądu płynącego w obwodzie. Pomaga w monitorowaniu obciążenia instalacji.",
     icon: <span>🔌</span>,
   },
   {
@@ -62,7 +57,6 @@ const initialSensors = [
     unit: "kW",
     status: "Good",
     description: "Moc w normie.",
-    tooltip: "Pokazuje aktualny pobór mocy. Pomaga w optymalizacji zużycia energii.",
     icon: <span>⚡</span>,
   },
   {
@@ -72,7 +66,6 @@ const initialSensors = [
     unit: "Hz",
     status: "Good",
     description: "Częstotliwość sieci stabilna.",
-    tooltip: "Monitoruje częstotliwość prądu w sieci. W Europie standardowa częstotliwość to 50 Hz.",
     icon: <span>📊</span>,
   },
   {
@@ -82,7 +75,6 @@ const initialSensors = [
     unit: "%",
     status: "Good",
     description: "Poziom harmonicznych w normie.",
-    tooltip: "Mierzy zniekształcenia harmoniczne w sieci. Wysokie wartości mogą wskazywać na problemy z jakością energii.",
     icon: <span>📈</span>,
   },
   {
@@ -92,7 +84,6 @@ const initialSensors = [
     unit: "PF",
     status: "Good",
     description: "Współczynnik mocy optymalny.",
-    tooltip: "Pokazuje stosunek mocy czynnej do pozornej. Wartość bliska 1.0 oznacza efektywne wykorzystanie energii.",
     icon: <span>📉</span>,
   },
   {
@@ -102,7 +93,6 @@ const initialSensors = [
     unit: "%",
     status: "Warning",
     description: "Wysokie obciążenie sieci.",
-    tooltip: "Monitoruje procentowe obciążenie systemu. Wartości powyżej 80% mogą wymagać uwagi.",
     icon: <span>⚖️</span>,
   }
 ];
@@ -133,7 +123,6 @@ const SensorsPanel = () => {
             unit={sensor.unit}
             status={sensor.status as "Good" | "Warning"}
             description={sensor.description}
-            tooltip={sensor.tooltip}
             onHide={() => hideItem(sensor.id.toString())}
           />
         ))}
