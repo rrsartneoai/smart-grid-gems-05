@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { TileLayer, MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useState, useEffect, Suspense } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -99,8 +99,8 @@ export function EnergyMaps() {
         ) : (
           <div className="space-y-6">
             {isMapMounted && (
-              <Suspense fallback={<LoadingSpinner />}>
-                <div style={{ height: '400px', width: '100%', position: 'relative' }}>
+              <div style={{ height: '400px', width: '100%', position: 'relative' }}>
+                <Suspense fallback={<LoadingSpinner />}>
                   <MapContainer
                     center={[52.0689, 19.4803]}
                     zoom={6}
@@ -112,8 +112,8 @@ export function EnergyMaps() {
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                   </MapContainer>
-                </div>
-              </Suspense>
+                </Suspense>
+              </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
