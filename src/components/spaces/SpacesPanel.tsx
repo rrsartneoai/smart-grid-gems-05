@@ -14,13 +14,11 @@ import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useToast } from "@/hooks/use-toast";
-import { useHiddenItems } from "@/hooks/useHiddenItems";
 
 export const SpacesPanel = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const spacesRef = useRef<HTMLDivElement>(null);
-  const { restoreItems } = useHiddenItems('hidden-spaces');
 
   const handleExport = async (format: 'pdf' | 'jpg') => {
     if (!spacesRef.current) return;
