@@ -35,16 +35,8 @@ export function EnergyMaps() {
   const [mapReady, setMapReady] = useState(false);
   const { toast } = useToast();
 
-  // Initialize map only after component mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setMapReady(true);
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
-      setMapReady(false);
-    };
+    setMapReady(true);
   }, []);
 
   const { data: energyData, isLoading } = useQuery({
@@ -61,34 +53,23 @@ export function EnergyMaps() {
         throw new Error('API key is not configured');
       }
 
-      try {
-        const response = await fetch('https://api.electricitymap.org/v3/power-breakdown/PL', {
-          headers: {
-            'auth-token': API_KEY,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast({
-            title: "Błąd API",
-            description: errorData.error || "Nie udało się pobrać danych",
-            variant: "destructive",
-          });
-          throw new Error(errorData.error || 'Failed to fetch energy data');
+      const response = await fetch(`https://api.electricitymap.org/v3/power-breakdown/PL`, {
+        headers: {
+          'auth-token': API_KEY
         }
+      });
 
-        return response.json();
-      } catch (error) {
-        console.error('API Error:', error);
+      if (!response.ok) {
+        const errorData = await response.json();
         toast({
-          title: "Błąd połączenia",
-          description: "Nie udało się połączyć z API",
+          title: "Błąd API",
+          description: errorData.error || "Nie udało się pobrać danych",
           variant: "destructive",
         });
-        throw error;
+        throw new Error(errorData.error || 'Failed to fetch energy data');
       }
+
+      return response.json();
     },
     retry: false
   });
@@ -125,13 +106,13 @@ export function EnergyMaps() {
           <LoadingSpinner />
         ) : (
           <div className="space-y-6">
-            <div className="h-[400px] relative bg-muted rounded-lg overflow-hidden">
+            <div className="h-[400px] relative">
               {mapReady && (
                 <MapContainer
-                  key={mapReady.toString()}
+                  key="energy-map"
                   center={[52.0689, 19.4803]}
                   zoom={6}
-                  style={{ height: '100%', width: '100%' }}
+                  style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
                   scrollWheelZoom={false}
                 >
                   <TileLayer
