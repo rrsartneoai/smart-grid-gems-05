@@ -8,10 +8,16 @@ import { RestoreButton } from "@/components/ui/restore-button";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
 import { EnergyTrendsChart } from './charts/EnergyTrendsChart';
+import { EfficiencyChart } from './charts/EfficiencyChart';
+import { EnergySourcesChart } from './charts/EnergySourcesChart';
+import { CorrelationChart } from './charts/CorrelationChart';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { UploadOptions } from "./UploadOptions";
 import { ExportButtons } from "./ExportButtons";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 const calculateForecast = (data: any[]) => {
   if (!data || data.length === 0) return [];
@@ -151,71 +157,29 @@ export function CompanyAnalysis() {
       id: 'efficiency-analysis',
       title: 'Analiza wydajności',
       component: (
-        <AreaChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Area
-            type="monotone"
-            dataKey="efficiency"
-            name="Wydajność"
-            stroke="#8884d8"
-            fill="#8884d8"
-          />
-        </AreaChart>
+        <EfficiencyChart 
+          data={showForecast ? 
+            [...selectedCompany.energyData, ...calculateForecast(selectedCompany.energyData)] : 
+            selectedCompany.energyData
+          }
+        />
       )
     },
     {
       id: 'energy-sources',
       title: 'Źródła energii',
-      component: (
-        <PieChart>
-          <Pie
-            data={[
-              { name: "Energia słoneczna", value: 30 },
-              { name: "Energia wiatrowa", value: 25 },
-              { name: "Biomasa", value: 20 },
-              { name: "Inne źródła", value: 25 },
-            ]}
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            fill="#8884d8"
-            dataKey="value"
-            label
-          >
-            {[
-              { name: "Energia słoneczna", value: 30 },
-              { name: "Energia wiatrowa", value: 25 },
-              { name: "Biomasa", value: 20 },
-              { name: "Inne źródła", value: 25 },
-            ].map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-      )
+      component: <EnergySourcesChart />
     },
     {
       id: 'correlation-analysis',
       title: 'Analiza korelacji',
       component: (
-        <ComposedChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="consumption" name="Zużycie" fill="#8884d8" />
-          <Scatter dataKey="efficiency" name="Wydajność" fill="#82ca9d" />
-        </ComposedChart>
+        <CorrelationChart 
+          data={showForecast ? 
+            [...selectedCompany.energyData, ...calculateForecast(selectedCompany.energyData)] : 
+            selectedCompany.energyData
+          }
+        />
       )
     },
   ];
