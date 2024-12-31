@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { ResponsiveContainer } from "recharts";
 import { useCompanyStore } from "@/components/CompanySidebar";
 import { companiesData } from "@/data/companies";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -21,11 +21,22 @@ export function EnergyChart() {
   const [chartType, setChartType] = useState<'line' | 'bar' | 'composed'>('line');
   const chartRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!selectedCompany?.energyData) {
+      toast({
+        title: "Brak danych",
+        description: "Nie znaleziono danych dla wybranej firmy",
+        variant: "destructive"
+      });
+    }
+  }, [selectedCompany, toast]);
+
   if (!selectedCompany?.energyData) {
     return (
       <Card className="col-span-4 p-6">
         <div className="text-center text-muted-foreground">
-          Brak danych do wyświetlenia
+          <p className="mb-2">Brak danych do wyświetlenia</p>
+          <p className="text-sm">Wybierz inną firmę lub sprawdź połączenie z bazą danych</p>
         </div>
       </Card>
     );
