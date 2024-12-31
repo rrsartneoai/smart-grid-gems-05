@@ -14,14 +14,11 @@ import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useToast } from "@/hooks/use-toast";
-import { useHiddenItems } from "@/hooks/useHiddenItems";
-import { Eye } from "lucide-react";
 
 export const SpacesPanel = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const spacesRef = useRef<HTMLDivElement>(null);
-  const { restoreItems, hiddenItems } = useHiddenItems('hidden-spaces');
 
   const handleExport = async (format: 'pdf' | 'jpg') => {
     if (!spacesRef.current) return;
@@ -66,13 +63,7 @@ export const SpacesPanel = () => {
 
   return (
     <div>
-      <div className="flex justify-end gap-2 mb-4">
-        {hiddenItems.length > 0 && (
-          <Button variant="outline" onClick={restoreItems} className="flex items-center gap-2">
-            <Eye className="h-4 w-4" />
-            Przywróć ukryte ({hiddenItems.length})
-          </Button>
-        )}
+      <div className="flex gap-2 mb-4">
         <Button variant="outline" onClick={() => handleExport('jpg')}>
           Eksportuj do JPG
         </Button>
