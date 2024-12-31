@@ -2,27 +2,14 @@ import { PowerData, PowerForecast, ConsumptionForecast } from '@/types/electrici
 
 const API_BASE_URL = 'https://api.electricitymap.org/v3';
 
-const getApiKey = () => {
-  const apiKey = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
-  if (!apiKey) {
-    throw new Error('API key not found in environment variables');
-  }
-  // Remove any whitespace and quotes that might have been accidentally included
-  return apiKey.trim().replace(/['"]/g, '');
-};
-
-const createHeaders = (apiKey: string) => {
-  return {
+export const fetchEnergyData = async (apiKey: string) => {
+  console.log('Starting API call with key:', apiKey.substring(0, 4) + '...');
+  
+  const headers = {
     'auth-token': apiKey,
     'Accept': 'application/json'
   };
-};
 
-export const fetchEnergyData = async (apiKey: string) => {
-  const cleanApiKey = apiKey.trim().replace(/['"]/g, '');
-  console.log('Starting API call with key:', cleanApiKey.substring(0, 4) + '...');
-  
-  const headers = createHeaders(cleanApiKey);
   console.log('Request headers:', headers);
   
   try {
@@ -56,79 +43,58 @@ export const fetchEnergyData = async (apiKey: string) => {
 };
 
 export const fetchPowerData = async (lat: number, lon: number): Promise<PowerData> => {
-  const apiKey = getApiKey();
-  const headers = createHeaders(apiKey);
+  const apiKey = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+  if (!apiKey) throw new Error('API key not found');
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/power-breakdown/PL?lat=${lat}&lon=${lon}`, {
-      headers
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Power Data Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-        error: errorData
-      });
-      throw new Error('Failed to fetch power data');
+  const response = await fetch(`${API_BASE_URL}/power-breakdown/PL?lat=${lat}&lon=${lon}`, {
+    headers: {
+      'auth-token': apiKey,
+      'Accept': 'application/json'
     }
-    return response.json();
-  } catch (error) {
-    console.error('Power Data Fetch Error:', error);
-    throw error;
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('Power Data Error:', errorData);
+    throw new Error('Failed to fetch power data');
   }
+  return response.json();
 };
 
 export const fetchPowerForecast = async (zoneId: string): Promise<PowerForecast> => {
-  const apiKey = getApiKey();
-  const headers = createHeaders(apiKey);
+  const apiKey = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+  if (!apiKey) throw new Error('API key not found');
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/power-forecast/${zoneId}`, {
-      headers
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Power Forecast Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-        error: errorData
-      });
-      throw new Error('Failed to fetch power forecast');
+  const response = await fetch(`${API_BASE_URL}/power-forecast/${zoneId}`, {
+    headers: {
+      'auth-token': apiKey,
+      'Accept': 'application/json'
     }
-    return response.json();
-  } catch (error) {
-    console.error('Power Forecast Fetch Error:', error);
-    throw error;
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('Power Forecast Error:', errorData);
+    throw new Error('Failed to fetch power forecast');
   }
+  return response.json();
 };
 
 export const fetchConsumptionForecast = async (lat: number, lon: number): Promise<ConsumptionForecast> => {
-  const apiKey = getApiKey();
-  const headers = createHeaders(apiKey);
+  const apiKey = import.meta.env.VITE_ELECTRICITY_MAP_API_KEY;
+  if (!apiKey) throw new Error('API key not found');
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/consumption-forecast?lat=${lat}&lon=${lon}`, {
-      headers
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Consumption Forecast Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-        error: errorData
-      });
-      throw new Error('Failed to fetch consumption forecast');
+  const response = await fetch(`${API_BASE_URL}/consumption-forecast?lat=${lat}&lon=${lon}`, {
+    headers: {
+      'auth-token': apiKey,
+      'Accept': 'application/json'
     }
-    return response.json();
-  } catch (error) {
-    console.error('Consumption Forecast Fetch Error:', error);
-    throw error;
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('Consumption Forecast Error:', errorData);
+    throw new Error('Failed to fetch consumption forecast');
   }
+  return response.json();
 };
