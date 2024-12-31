@@ -4,7 +4,6 @@ import { useCompanyStore } from "@/components/CompanySidebar";
 import { companiesData } from "@/data/companies";
 import { StatCard } from "./StatCard";
 import { useHiddenItems } from "@/hooks/useHiddenItems";
-import { RestoreButton } from "@/components/ui/restore-button";
 
 export const PowerStats = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -13,7 +12,7 @@ export const PowerStats = () => {
     (company) => company.id === selectedCompanyId
   );
 
-  const { hiddenItems, hideItem, restoreItems, isHidden } = useHiddenItems('hidden-power-stats');
+  const { hideItem, isHidden } = useHiddenItems('hidden-power-stats');
 
   const visibleStats = selectedCompany?.stats.filter(
     (stat) => !isHidden(stat.title)
@@ -21,12 +20,6 @@ export const PowerStats = () => {
 
   return (
     <>
-      <div className="flex justify-end mb-4">
-        <RestoreButton
-          onClick={restoreItems}
-          hiddenCount={selectedCompany?.stats.length - visibleStats.length}
-        />
-      </div>
       {visibleStats.map((stat, index) => (
         <StatCard
           key={stat.title}
