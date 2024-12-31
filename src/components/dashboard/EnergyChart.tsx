@@ -3,6 +3,7 @@ import { ResponsiveContainer } from "recharts";
 import { useCompanyStore } from "@/components/CompanySidebar";
 import { companiesData } from "@/data/companies";
 import { useState, useRef } from "react";
+import { ZoomIn } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -81,16 +82,6 @@ export function EnergyChart() {
     }
   };
 
-  if (!selectedCompany?.energyData) {
-    return (
-      <Card className="col-span-4 p-6">
-        <div className="text-center text-muted-foreground">
-          Brak danych do wyświetlenia
-        </div>
-      </Card>
-    );
-  }
-
   return (
     <Card className="col-span-4 p-6">
       <div className="flex justify-between items-center mb-6">
@@ -115,7 +106,7 @@ export function EnergyChart() {
         <ResponsiveContainer width="100%" height="100%">
           <ChartRenderer
             chartType={chartType}
-            data={selectedCompany.energyData}
+            data={selectedCompany?.energyData || []}
             zoomLeft={zoomLeft}
             zoomRight={zoomRight}
             isZoomed={isZoomed}

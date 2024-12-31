@@ -75,7 +75,7 @@ export const SpacesPanel = () => {
       <div ref={spacesRef}>
         <DndContext collisionDetection={closestCenter}>
           <SortableContext items={[]} strategy={rectSortingStrategy}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
               <PowerStats />
             </div>
           </SortableContext>
@@ -85,7 +85,7 @@ export const SpacesPanel = () => {
           <EnergyChart />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+        <div className="grid gap-6 p-8">
           <DeviceStatus />
         </div>
 
