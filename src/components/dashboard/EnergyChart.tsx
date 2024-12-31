@@ -8,6 +8,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ChartControls } from './chart/ChartControls';
 import { ChartRenderer } from './chart/ChartRenderer';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function EnergyChart() {
   const { toast } = useToast();
@@ -31,13 +33,30 @@ export function EnergyChart() {
     }
   }, [selectedCompany, toast]);
 
+  if (!selectedCompanyId) {
+    return (
+      <Card className="col-span-4 p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Brak wybranej firmy</AlertTitle>
+          <AlertDescription>
+            Wybierz firmę z menu bocznego, aby zobaczyć dane o zużyciu energii.
+          </AlertDescription>
+        </Alert>
+      </Card>
+    );
+  }
+
   if (!selectedCompany?.energyData) {
     return (
       <Card className="col-span-4 p-6">
-        <div className="text-center text-muted-foreground">
-          <p className="mb-2">Brak danych do wyświetlenia</p>
-          <p className="text-sm">Wybierz inną firmę lub sprawdź połączenie z bazą danych</p>
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Brak danych</AlertTitle>
+          <AlertDescription>
+            Nie znaleziono danych dla wybranej firmy. Sprawdź połączenie z bazą danych.
+          </AlertDescription>
+        </Alert>
       </Card>
     );
   }
