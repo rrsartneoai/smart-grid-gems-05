@@ -1,45 +1,59 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Languages } from "lucide-react";
+import { Languages, Globe } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import { useToast } from "@/hooks/use-toast";
+
+const languages = [
+  { code: "pl", name: "Polski" },
+  { code: "en", name: "English" },
+  { code: "de", name: "Deutsch" },
+  { code: "uk", name: "Українська" },
+  { code: "ru", name: "Русский" },
+];
 
 export function LanguageSelector() {
   const { i18n } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
-  const languages = [
-    { code: "pl", label: "Polski" },
-    { code: "en", label: "English" },
-    { code: "de", label: "Deutsch" },
-    { code: "uk", label: "Українська" },
-    { code: "ru", label: "Русский" },
-  ];
-
-  const handleLanguageChange = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
-    setIsOpen(false);
+  const handleLanguageChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    localStorage.setItem('language', langCode);
+    
+    const langNames = {
+      pl: "Polski",
+      en: "English",
+      de: "Deutsch",
+      uk: "Українська",
+      ru: "Русский"
+    };
+    
+    toast({
+      title: i18n.t("languageChanged", "Language changed"),
+      description: i18n.t("languageChangedTo", "Language has been changed to") + " " + langNames[langCode as keyof typeof langNames],
+    });
   };
 
   return (
-    <div className="relative inline-block">
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <div className="p-2 hover:bg-accent hover:text-accent-foreground rounded-md cursor-pointer">
-            <Languages className="h-5 w-5" />
-          </div>
+    <div className="flex items-center gap-2">
+      <Globe className="h-5 w-5 text-primary animate-spin" style={{ animationDuration: '3s' }} />
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent">
+          <Languages className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {languages.map((language) => (
+          {languages.map((lang) => (
             <DropdownMenuItem
-              key={language.code}
-              onClick={() => handleLanguageChange(language.code)}
+              key={lang.code}
+              onClick={() => handleLanguageChange(lang.code)}
+              className={i18n.language === lang.code ? "bg-accent" : ""}
             >
-              {language.label}
+              {lang.name}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
