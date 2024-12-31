@@ -14,11 +14,13 @@ import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useToast } from "@/hooks/use-toast";
+import { useHiddenItems } from "@/hooks/useHiddenItems";
 
 export const SpacesPanel = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const spacesRef = useRef<HTMLDivElement>(null);
+  const { hiddenItems, restoreItems } = useHiddenItems('hidden-spaces');
 
   const handleExport = async (format: 'pdf' | 'jpg') => {
     if (!spacesRef.current) return;
@@ -63,19 +65,24 @@ export const SpacesPanel = () => {
 
   return (
     <div>
-      <div className="flex justify-end gap-2 mb-4">
-        <Button variant="outline" onClick={() => handleExport('jpg')}>
-          Eksportuj do JPG
-        </Button>
-        <Button variant="outline" onClick={() => handleExport('pdf')}>
-          Eksportuj do PDF
-        </Button>
+      <div className="flex justify-between gap-2 mb-4">
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={restoreItems}>
+            Przywróć ukryte
+          </Button>
+          <Button variant="outline" onClick={() => handleExport('jpg')}>
+            Eksportuj do JPG
+          </Button>
+          <Button variant="outline" onClick={() => handleExport('pdf')}>
+            Eksportuj do PDF
+          </Button>
+        </div>
       </div>
       
       <div ref={spacesRef}>
         <DndContext collisionDetection={closestCenter}>
           <SortableContext items={[]} strategy={rectSortingStrategy}>
-            <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
               <PowerStats />
             </div>
           </SortableContext>
