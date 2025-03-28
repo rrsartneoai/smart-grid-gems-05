@@ -14,7 +14,7 @@ export const KnowledgePanel = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="indicators" className="w-full">
-            <TabsList className="mb-4">
+            <TabsList className="mb-4 flex flex-wrap">
               <TabsTrigger value="indicators">Wskaźniki Jakości Powietrza</TabsTrigger>
               <TabsTrigger value="aqi">Indeks AQI</TabsTrigger>
               <TabsTrigger value="glossary">Słowniczek Pojęć</TabsTrigger>
@@ -23,6 +23,15 @@ export const KnowledgePanel = () => {
               <TabsTrigger value="standards">Standardy i Normy</TabsTrigger>
               <TabsTrigger value="units">Jednostki Miar</TabsTrigger>
               <TabsTrigger value="technical">Aspekty Techniczne</TabsTrigger>
+              <TabsTrigger value="economic">Aspekty Ekonomiczne</TabsTrigger>
+              <TabsTrigger value="regulatory">Ramy Regulacyjne</TabsTrigger>
+              <TabsTrigger value="social">Implikacje Społeczne</TabsTrigger>
+              <TabsTrigger value="risk">Analiza Ryzyka i Szans</TabsTrigger>
+              <TabsTrigger value="best-practices">Najlepsze Praktyki</TabsTrigger>
+              <TabsTrigger value="case-studies">Studia Przypadków</TabsTrigger>
+              <TabsTrigger value="metrics">Metryki Wydajności</TabsTrigger>
+              <TabsTrigger value="architecture">Architektura Sieci</TabsTrigger>
+              <TabsTrigger value="implementation">Wytyczne Wdrożeniowe</TabsTrigger>
             </TabsList>
 
             <TabsContent value="indicators">
@@ -391,6 +400,331 @@ export const KnowledgePanel = () => {
                       <TableCell>Systemy analizy i przetwarzania danych pomiarowych</TableCell>
                       <TableCell>Opóźnienie: &lt;5s, Dostępność: &gt;99.9%, Algorytmy walidacji danych, Systemy bazodanowe</TableCell>
                       <TableCell>Zapewnienie bezpieczeństwa danych, integracja danych z różnych źródeł, skalowalność.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            {/* New tabs added based on user request */}
+            <TabsContent value="economic">
+              <h2 className="text-xl font-bold mb-4">Aspekty Ekonomiczne</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Kategoria</TableHead>
+                      <TableHead>Wartość</TableHead>
+                      <TableHead>Uwagi</TableHead>
+                      <TableHead>Czynniki Wpływające na Koszty</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Koszty Instalacji</TableCell>
+                      <TableCell>5000-15000 PLN/stację</TableCell>
+                      <TableCell>Zależne od typu i liczby czujników, lokalizations, złożoności technicznej, dostawcy</TableCell>
+                      <TableCell>Rodzaj czujników, koszty robocizny, koszty infrastruktury, lokalizacja</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Koszty Utrzymania</TableCell>
+                      <TableCell>500-1500 PLN/miesiąc</TableCell>
+                      <TableCell>Obejmuje kalibrację i serwis, wymianę części, oprogramowanie, koszty komunikacji. Zależy od ilości stacji, jakości powietrza, intensywności eksploatacji.</TableCell>
+                      <TableCell>Częstotliwość kalibracji, zakres serwisu, dostępność części zamiennych, koszty energii.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Zwrot z Inwestycji</TableCell>
+                      <TableCell>2-4 lata</TableCell>
+                      <TableCell>Przy optymalnym wykorzystaniu danych, poprawie jakości powietrza, redukcji kosztów zdrowotnych i społecznych. Zależy od zdefiniowanych celów i założeń, stopnia wykorzystania danych.</TableCell>
+                      <TableCell>Efektywność systemu, świadomość społeczna, wsparcie ze strony władz.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="regulatory">
+              <h2 className="text-xl font-bold mb-4">Ramy Regulacyjne</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Regulacja</TableHead>
+                      <TableHead>Zakres</TableHead>
+                      <TableHead>Wymagania</TableHead>
+                      <TableHead>Cel Regulacji</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Dyrektywa UE 2008/50/WE</TableCell>
+                      <TableCell>Jakość powietrza</TableCell>
+                      <TableCell>Standardy pomiarowe, raportowanie, cele jakości powietrza, ocena i zarządzanie jakością powietrza.</TableCell>
+                      <TableCell>Ochrona zdrowia ludzkiego i środowiska.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Norma PN-EN 14211</TableCell>
+                      <TableCell>Pomiary NO₂</TableCell>
+                      <TableCell>Metodologia, dokładność, Procedura pomiaru i kontroli jakości danych z pomiarów NO₂.</TableCell>
+                      <TableCell>Zapewnienie wiarygodności i porównywalności danych pomiarowych.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>ISO 7168-2</TableCell>
+                      <TableCell>Wymiana danych</TableCell>
+                      <TableCell>Formaty, protokoły, Specyfikacja formatów wymiany danych, procedury transmisji danych.</TableCell>
+                      <TableCell>Umożliwienie wymiany danych między różnymi systemami i organizacjami.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="social">
+              <h2 className="text-xl font-bold mb-4">Implikacje Społeczne</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Aspekt</TableHead>
+                      <TableHead>Wpływ</TableHead>
+                      <TableHead>Działania</TableHead>
+                      <TableHead>Mierniki Sukcesu</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Świadomość Publiczna</TableCell>
+                      <TableCell>Wysoki</TableCell>
+                      <TableCell>Edukacja, dostęp do danych, Kampanie informacyjne, zapewnienie przejrzystości danych.</TableCell>
+                      <TableCell>Wzrost zainteresowania jakością powietrza, częstszą interakcje z platformami monitoringu.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Zdrowie Publiczne</TableCell>
+                      <TableCell>Znaczący</TableCell>
+                      <TableCell>Systemy ostrzegania, rekomendacje, Wdrażanie programów profilaktycznych, poprawa dostępności informacji o zagrożeniach.</TableCell>
+                      <TableCell>Skuteczność systemów ostrzegania (redukcja ekspozycji na zanieczyszczenia), redukcja zachorowalności na choroby związane z zanieczyszczeniem powietrza.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Partycypacja Społeczna</TableCell>
+                      <TableCell>Średni</TableCell>
+                      <TableCell>Platformy zgłaszania, konsultacje, Zachęcanie do udziału w konsultacjach, rozwój narzędzi do raportowania, forum dyskusyjne.</TableCell>
+                      <TableCell>Liczba aktywnych użytkowników platform, liczba zgłoszeń, liczba opinii i komentarzy.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="risk">
+              <h2 className="text-xl font-bold mb-4">Analiza Ryzyka i Szans</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Kategoria</TableHead>
+                      <TableHead>Opis</TableHead>
+                      <TableHead>Priorytet</TableHead>
+                      <TableHead>Strategia Zarządzania</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Ryzyko Techniczne</TableCell>
+                      <TableCell>Awarie systemów, błędy pomiarowe, utrata danych, nieprawidłowe funkcjonowanie czujników.</TableCell>
+                      <TableCell>Wysoki</TableCell>
+                      <TableCell>Regularna konserwacja, redundancja systemów, ciągła kontrola jakości, szkolenia personelu, wdrożenie procesów kalibracji.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Ryzyko Operacyjne</TableCell>
+                      <TableCell>Problemy z utrzymaniem, wandalizm, nieodpowiednia infrastruktura, brak zasobów.</TableCell>
+                      <TableCell>Średni</TableCell>
+                      <TableCell>Planowanie konserwacji, zabezpieczenie przed wandalizmem, współpraca z lokalnymi społecznościami.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Szanse Rozwojowe</TableCell>
+                      <TableCell>Rozbudowa sieci, nowe aplikacje, integracja z innymi systemami, rozwój nowych technologii.</TableCell>
+                      <TableCell>Wysoki</TableCell>
+                      <TableCell>Poszukiwanie możliwości pozyskiwania finansowania na rozwój sieci oraz wdrożenia nowych rozwiązań.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="best-practices">
+              <h2 className="text-xl font-bold mb-4">Najlepsze Praktyki</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Obszar</TableHead>
+                      <TableHead>Praktyka</TableHead>
+                      <TableHead>Szczegółowy Opis</TableHead>
+                      <TableHead>Korzyści</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Kalibracja</TableCell>
+                      <TableCell>Regularna (co 3 miesiące)</TableCell>
+                      <TableCell>Użycie wzorców odniesienia, kalibracja w miejscu instalacji (jeśli to możliwe).</TableCell>
+                      <TableCell>Zapewnienie dokładności pomiarów, wiarygodność danych.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Walidacja Danych</TableCell>
+                      <TableCell>Automatyczna + manualna</TableCell>
+                      <TableCell>Implementacja algorytmów do automatycznego wykrywania błędów, weryfikacja manualna przez ekspertów.</TableCell>
+                      <TableCell>Wiarygodność wyników, eliminacja błędów pomiarowych.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Komunikacja</TableCell>
+                      <TableCell>Wielokanałowa</TableCell>
+                      <TableCell>Wykorzystanie aplikacji mobilnych, stron internetowych, mediów społecznościowych, powiadomienia SMS/e-mail, komunikacja z mediami.</TableCell>
+                      <TableCell>Szeroki zasięg informacji, szybkie powiadomienia o zagrożeniach.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="case-studies">
+              <h2 className="text-xl font-bold mb-4">Studia Przypadków</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Lokalizacja</TableHead>
+                      <TableHead>Projekt</TableHead>
+                      <TableHead>Rezultaty</TableHead>
+                      <TableHead>Kluczowe Aspekty</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Warszawa</TableCell>
+                      <TableCell>Sieć 100 czujników</TableCell>
+                      <TableCell>Redukcja PM2.5 o 15%, zwiększenie świadomości mieszkańców, wzrost wykorzystaniu roweru oraz transport publiczny</TableCell>
+                      <TableCell>Rozbudowana sieć czujników, integracja z aplikacjami, współpraca z władzami miasta, kampania edukacyjna.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Kraków</TableCell>
+                      <TableCell>System alertów smogowych</TableCell>
+                      <TableCell>30% wzrost świadomości, zmniejszenie liczby dni z przekroczeniami norm, zmiana w sposobie ogrzewania, wspieranie programów dotacyjnych.</TableCell>
+                      <TableCell>System oparł się na prognozowaniu, kombinacja danych pomiarowych i meteorologicznych, wczesne ostrzeganie społeczności.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Poznań</TableCell>
+                      <TableCell>Integracja z IoT</TableCell>
+                      <TableCell>Optymalizacja zarządzania, usprawnienie przepływu danych, rozwój platformy IoT</TableCell>
+                      <TableCell>Integracja z istniejącą infrastrukturą miejską, wykorzystanie platformy IoT, analiza i prezentacja danych w czasie rzeczywistym.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="metrics">
+              <h2 className="text-xl font-bold mb-4">Metryki Wydajności</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Metryka</TableHead>
+                      <TableHead>Cel</TableHead>
+                      <TableHead>Aktualny Status</TableHead>
+                      <TableHead>Metody Pomiarowe</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Dostępność Danych</TableCell>
+                      <TableCell>&gt;99%</TableCell>
+                      <TableCell>99.5%</TableCell>
+                      <TableCell>Monitorowanie czasu pracy systemów, weryfikacja dostępności baz danych i serwerów, testy połączeń.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Dokładność Pomiarów</TableCell>
+                      <TableCell>±2%</TableCell>
+                      <TableCell>±1.8%</TableCell>
+                      <TableCell>Regularna kalibracja, porównanie z metodami referencyjnymi, analiza błędów pomiarowych.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Czas Odpowiedzi</TableCell>
+                      <TableCell>&lt;5s</TableCell>
+                      <TableCell>3.2s</TableCell>
+                      <TableCell>Pomiar czasu przetworzenia danych od momentu pomiaru do publikacji, testy obciążeniowe.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="architecture">
+              <h2 className="text-xl font-bold mb-4">Architektura Sieci</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Komponent</TableHead>
+                      <TableHead>Specyfikacja</TableHead>
+                      <TableHead>Funkcja</TableHead>
+                      <TableHead>Parametry Techniczne</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Czujniki</TableCell>
+                      <TableCell>Klasa 1</TableCell>
+                      <TableCell>Pomiary podstawowe (PM2.5, PM10, NO2, O3, SO2, CO)</TableCell>
+                      <TableCell>Dokładność, zakres pomiarowy, zasilanie, typ komunikacji, odporność na warunki atmosferyczne.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Koncentratory</TableCell>
+                      <TableCell>4G/5G</TableCell>
+                      <TableCell>Agregacja danych</TableCell>
+                      <TableCell>Przepustowość, zasięg, zabezpieczenia, zasilanie.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Serwery</TableCell>
+                      <TableCell>Redundantne</TableCell>
+                      <TableCell>Przetwarzanie, przechowywanie i wizualizacja danych, zarządzanie bazą danych.</TableCell>
+                      <TableCell>Pojemność pamięci, moc obliczeniowa, systemy bezpieczeństwa, oprogramowanie, redundancja.</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="implementation">
+              <h2 className="text-xl font-bold mb-4">Wytyczne Wdrożeniowe</h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Etap</TableHead>
+                      <TableHead>Czas Trwania</TableHead>
+                      <TableHead>Kluczowe Działania</TableHead>
+                      <TableHead>Zasoby</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Planowanie</TableCell>
+                      <TableCell>2-3 miesiące</TableCell>
+                      <TableCell>Analiza potrzeb, wybór lokalizacji, wybór technologii, przygotowanie budżetu i harmonogramu.</TableCell>
+                      <TableCell>Eksperci ds. jakości powietrza, analitycy danych, specjaliści ds. IT, inżynierowie.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Instalacja</TableCell>
+                      <TableCell>1-2 miesiące</TableCell>
+                      <TableCell>Montaż, kalibracja, testy funkcjonalności, integracja z istniejącymi systemami, szkolenie personelu.</TableCell>
+                      <TableCell>Technicy, inżynierowie, dostawcy sprzętu, oprogramowanie.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Testowanie</TableCell>
+                      <TableCell>1 miesiąc</TableCell>
+                      <TableCell>Walidacja, optymalizacja, analiza danych, raportowanie wyników, wprowadzenie ewentualnych poprawek.</TableCell>
+                      <TableCell>Eksperci ds. jakości powietrza, analitycy danych, zespół testowy.</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
