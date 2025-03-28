@@ -1,15 +1,12 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
 export const KnowledgePanel = () => {
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="my-[9px]">
           <CardTitle className="text-2xl">Analiza Jakości Powietrza - Terminologia i Wskaźniki</CardTitle>
         </CardHeader>
         <CardContent>
@@ -35,7 +32,7 @@ export const KnowledgePanel = () => {
             </TabsList>
 
             <TabsContent value="indicators">
-              <h2 className="text-xl font-bold mb-4">Podstawowe Wskaźniki Jakości Powietrza</h2>
+              <h2 className="text-xl font-bold mb-4 my-[131px]">Podstawowe Wskaźniki Jakości Powietrza</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -747,6 +744,5 @@ export const KnowledgePanel = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
-  );
+    </div>;
 };
