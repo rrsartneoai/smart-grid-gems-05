@@ -45,6 +45,25 @@ export const pl = {
     "minutesAgo": "minut temu",
     "back": "Powrót",
 
+    // Visualization section
+    "addSensorData": "Dodaj dane z sensora",
+    "compareData": "Porównaj dane",
+    "generateReport": "Generuj raport",
+    "sensorComparison": "Porównanie sensorów",
+    "overlayCharts": "Nałóż wykresy",
+    "noDataToCompare": "Brak danych do porównania",
+    "selectDataSeries": "Wybierz serie danych",
+    "reportTitle": "Tytuł raportu",
+    "reportDescription": "Opis raportu",
+    "includeCharts": "Dołącz wykresy",
+    "includeRawData": "Dołącz surowe dane",
+    "includeSummary": "Dołącz podsumowanie",
+    "comparisonChart": "Wykres porównawczy",
+    "dataSource": "Źródło danych",
+    "reportGenerated": "Raport wygenerowany",
+    "addAnotherSensor": "Dodaj kolejny sensor",
+    "combinedView": "Widok łączony",
+
     // Integrations Section
     "smartHome": "Smart Home",
     "energyManagement": "Zarządzanie energią",

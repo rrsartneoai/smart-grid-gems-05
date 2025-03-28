@@ -26,7 +26,8 @@ const VisualizationTab = () => {
       const parsedData = await parseCsvFiles(files);
       
       if (parsedData && parsedData.length > 0) {
-        setSensorData(parsedData);
+        // Append to existing data or set new data
+        setSensorData(currentData => [...currentData, ...parsedData]);
         
         // Check if we have any actual readings
         const hasReadings = parsedData.some(sensor => 
@@ -114,6 +115,21 @@ const VisualizationTab = () => {
     }
   };
 
+  // Function to trigger file selection for adding another sensor
+  const handleAddAnotherSensor = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.csv';
+    fileInput.multiple = true;
+    fileInput.onchange = (e) => {
+      const input = e.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        handleFileUpload(Array.from(input.files));
+      }
+    };
+    fileInput.click();
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <VisualizationHeader 
@@ -133,6 +149,7 @@ const VisualizationTab = () => {
         isLoading={isLoading}
         activeSensorTab={activeSensorTab}
         setActiveSensorTab={setActiveSensorTab}
+        onAddSensor={handleAddAnotherSensor}
       />
     </div>
   );
