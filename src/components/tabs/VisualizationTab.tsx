@@ -5,6 +5,7 @@ import { VisualizationContent } from '../visualization/VisualizationContent';
 import { SensorData, TimeRange } from '../visualization/types';
 import { parseCsvFiles } from '../visualization/utils/csvParser';
 import { toast } from 'sonner';
+import { generateCSV, generateXLSX } from '@/utils/reportUtils';
 
 const VisualizationTab = () => {
   const [sensorData, setSensorData] = useState<SensorData[]>([]);
@@ -88,8 +89,29 @@ const VisualizationTab = () => {
   };
 
   const handleDownloadReport = () => {
-    // In a real application, this would generate and download a report
-    toast.success('Pobieranie raportu...');
+    // Prepare data for export formats that need explicit data (CSV, Excel)
+    const exportableData = sensorData.flatMap(sensor => 
+      Object.entries(sensor.readings || {}).map(([date, readings]) => ({
+        sensorId: sensor.id,
+        sensorName: sensor.name,
+        date,
+        ...readings.reduce((acc, reading) => ({ ...acc, [reading.metric]: reading.value }), {})
+      }))
+    );
+    
+    if (exportableData.length === 0) {
+      toast.error('Brak danych do eksportu.');
+      return;
+    }
+    
+    // We'll use this for CSV and Excel exports (PDF and PNG use DOM rendering)
+    const format = window.prompt('Wybierz format (csv lub xlsx):', 'csv');
+    
+    if (format === 'csv') {
+      generateCSV(exportableData, 'sensor_data');
+    } else if (format === 'xlsx') {
+      generateXLSX(exportableData, 'sensor_data');
+    }
   };
 
   return (

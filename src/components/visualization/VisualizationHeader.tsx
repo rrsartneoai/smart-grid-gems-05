@@ -3,6 +3,9 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { Plus, Settings, Trash2, Download, RefreshCw } from 'lucide-react';
 import { TimeRange } from './types';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { generatePDF, generatePNG, generateCSV, generateXLSX } from '@/utils/reportUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface VisualizationHeaderProps {
   onFileUpload: (files: File[]) => void;
@@ -24,6 +27,7 @@ export const VisualizationHeader: React.FC<VisualizationHeaderProps> = ({
   hasSensorData
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -37,6 +41,36 @@ export const VisualizationHeader: React.FC<VisualizationHeaderProps> = ({
 
   const handleAddFileClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleDownload = (format: 'pdf' | 'png' | 'csv' | 'xlsx') => {
+    if (!hasSensorData) {
+      toast({
+        title: "Brak danych",
+        description: "Wczytaj dane czujników, aby wygenerować raport",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const sensorContentElement = 'sensor-visualization-content';
+    
+    switch (format) {
+      case 'pdf':
+        generatePDF(sensorContentElement, 'sensor_report');
+        break;
+      case 'png':
+        generatePNG(sensorContentElement, 'sensor_report');
+        break;
+      case 'csv':
+        // For CSV and XLSX we should pass the data through the onDownloadReport callback
+        onDownloadReport();
+        break;
+      case 'xlsx':
+        // For CSV and XLSX we should pass the data through the onDownloadReport callback
+        onDownloadReport();
+        break;
+    }
   };
 
   const timeRanges: {label: string, value: TimeRange}[] = [
@@ -83,15 +117,32 @@ export const VisualizationHeader: React.FC<VisualizationHeaderProps> = ({
             <Trash2 className="h-4 w-4" />
           </Button>
           
-          <Button 
-            variant="outline"
-            size="sm"
-            onClick={onDownloadReport}
-            disabled={!hasSensorData}
-            title="Pobierz raport"
-          >
-            <Download className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasSensorData}
+                title="Pobierz raport"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleDownload('pdf')}>
+                Pobierz PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDownload('png')}>
+                Pobierz PNG
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDownload('csv')}>
+                Pobierz CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDownload('xlsx')}>
+                Pobierz Excel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

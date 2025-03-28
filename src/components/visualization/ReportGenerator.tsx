@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -22,107 +23,33 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ data, fileName, child
       }
 
       const element = chartRef.current;
-
-      // Ensure the element is in view
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
-      // Initial delay to allow for any animations or transitions
-      await new Promise(resolve => setTimeout(resolve, 2500));
-
-      // Check dimensions multiple times to ensure chart is fully rendered
-      let attempts = 0;
-      const maxAttempts = 15; // Increased max attempts
-      let elementRect;
-
-      const checkDimensions = () => {
-        elementRect = element.getBoundingClientRect();
-        const hasValidDimensions = elementRect.width > 100 && elementRect.height > 100; // Minimum size threshold
-        const isVisible = elementRect.top >= 0 && elementRect.left >= 0 &&
-                         elementRect.bottom <= window.innerHeight && elementRect.right <= window.innerWidth;
-        
-        // Check if all child elements are rendered and have reasonable dimensions
-        const allChildrenRendered = Array.from(element.getElementsByTagName('*'))
-          .every(el => {
-            const rect = el.getBoundingClientRect();
-            // Ensure elements have reasonable dimensions (at least 5x5 pixels)
-            return rect.width >= 5 && rect.height >= 5;
-          });
-
-        // Additional check for SVG elements which might need special handling
-        const svgElements = element.getElementsByTagName('svg');
-        const svgRendered = Array.from(svgElements).every(svg => {
-          const rect = svg.getBoundingClientRect();
-          return rect.width >= 5 && rect.height >= 5;
-        });
-
-        return hasValidDimensions && isVisible && allChildrenRendered && svgRendered;
-      };
-
-      while (attempts < maxAttempts) {
-        if (checkDimensions()) {
-          // Element and all children are fully visible and have valid dimensions
-          // Add extra delay after successful check to ensure stability
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          break;
-        }
-        
-        // Force a reflow to trigger any pending layout calculations
-        element.offsetHeight;
-        
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Increased delay
-        attempts++;
-        
-        if (attempts === maxAttempts - 1) {
-          // Last attempt - try forcing a style update
-          element.style.display = 'none';
-          element.offsetHeight; // Force reflow
-          element.style.display = '';
-        }
-        
-        if (attempts === maxAttempts) {
-          console.error('Chart dimensions:', elementRect);
-          console.error('Window dimensions:', { 
-            width: window.innerWidth, 
-            height: window.innerHeight 
-          });
-          throw new Error(`Chart element not properly rendered after ${maxAttempts} attempts. Dimensions: ${JSON.stringify(elementRect)}`);
-        }
-      }
+      // Force element to have minimum height if it's zero
+      const originalStyle = element.getAttribute('style') || '';
+      element.setAttribute('style', `${originalStyle}; min-height: 400px !important; display: block !important;`);
+      
+      // Wait for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const canvas = await html2canvas(element, {
-        scale: 3, // Higher scale for better quality
+        scale: 3,
         useCORS: true,
-        logging: true, // Enable logging for debugging
+        logging: true,
         backgroundColor: '#ffffff',
         allowTaint: true,
-        foreignObjectRendering: true, // Better support for external elements
         onclone: (clonedDoc) => {
-          // Ensure all images are loaded
-          const images = clonedDoc.getElementsByTagName('img');
-          const imagePromises = Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-            });
-          });
-
-          // Ensure all SVGs are properly rendered
-          const svgs = clonedDoc.getElementsByTagName('svg');
-          Array.from(svgs).forEach(svg => {
-            // Force SVG to render by accessing its bounding box
-            svg.getBBox();
-            // Ensure SVG has explicit dimensions
-            if (!svg.getAttribute('width')) {
-              const rect = svg.getBoundingClientRect();
-              svg.setAttribute('width', rect.width.toString());
-              svg.setAttribute('height', rect.height.toString());
-            }
-          });
-
-          return Promise.all(imagePromises);
+          // Force minimum height on cloned element too
+          const clonedElement = clonedDoc.getElementById(chartRef.current?.id || 'chart');
+          if (clonedElement) {
+            clonedElement.style.minHeight = '400px';
+            clonedElement.style.display = 'block';
+          }
+          return Promise.resolve();
         }
       });
+
+      // Restore original style
+      element.setAttribute('style', originalStyle);
 
       const link = document.createElement('a');
       link.download = `${fileName}.png`;
@@ -136,7 +63,6 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ data, fileName, child
     }
   };
 
-
   const generatePDF = async () => {
     try {
       if (!chartRef.current || !document.body.contains(chartRef.current)) {
@@ -144,104 +70,28 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ data, fileName, child
       }
 
       const element = chartRef.current;
-
-      // Ensure the element is in view
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
-      // Initial delay to allow for any animations or transitions
-      await new Promise(resolve => setTimeout(resolve, 2500));
+      // Force element to have minimum height if it's zero
+      const originalStyle = element.getAttribute('style') || '';
+      element.setAttribute('style', `${originalStyle}; min-height: 400px !important; display: block !important;`);
+      
+      // Wait for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Check dimensions multiple times to ensure chart is fully rendered
-      let attempts = 0;
-      const maxAttempts = 15; // Increased max attempts
-      let elementRect;
-
-      const checkDimensions = () => {
-        elementRect = element.getBoundingClientRect();
-        const hasValidDimensions = elementRect.width > 100 && elementRect.height > 100; // Minimum size threshold
-        const isVisible = elementRect.top >= 0 && elementRect.left >= 0 &&
-                         elementRect.bottom <= window.innerHeight && elementRect.right <= window.innerWidth;
-        
-        // Check if all child elements are rendered and have reasonable dimensions
-        const allChildrenRendered = Array.from(element.getElementsByTagName('*'))
-          .every(el => {
-            const rect = el.getBoundingClientRect();
-            // Ensure elements have reasonable dimensions (at least 5x5 pixels)
-            return rect.width >= 5 && rect.height >= 5;
-          });
-
-        // Additional check for SVG elements which might need special handling
-        const svgElements = element.getElementsByTagName('svg');
-        const svgRendered = Array.from(svgElements).every(svg => {
-          const rect = svg.getBoundingClientRect();
-          return rect.width >= 5 && rect.height >= 5;
-        });
-
-        return hasValidDimensions && isVisible && allChildrenRendered && svgRendered;
-      };
-
-      while (attempts < maxAttempts) {
-        if (checkDimensions()) {
-          // Element and all children are fully visible and have valid dimensions
-          // Add extra delay after successful check to ensure stability
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          break;
-        }
-        
-        // Force a reflow to trigger any pending layout calculations
-        element.offsetHeight;
-        
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Increased delay
-        attempts++;
-        
-        if (attempts === maxAttempts - 1) {
-          // Last attempt - try forcing a style update
-          element.style.display = 'none';
-          element.offsetHeight; // Force reflow
-          element.style.display = '';
-        }
-        
-        if (attempts === maxAttempts) {
-          console.error('Chart dimensions:', elementRect);
-          console.error('Window dimensions:', { 
-            width: window.innerWidth, 
-            height: window.innerHeight 
-          });
-          throw new Error(`Chart element not properly rendered after ${maxAttempts} attempts. Dimensions: ${JSON.stringify(elementRect)}`);
-        }
-      }
       const canvas = await html2canvas(element, {
-        scale: 3, // Higher scale for better quality
+        scale: 3,
         useCORS: true,
-        logging: true, // Enable logging for debugging
+        logging: true,
         backgroundColor: '#ffffff',
         allowTaint: true,
-        foreignObjectRendering: true, // Better support for external elements
         onclone: (clonedDoc) => {
-          // Ensure all images are loaded
-          const images = clonedDoc.getElementsByTagName('img');
-          const imagePromises = Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-            });
-          });
-
-          // Ensure all SVGs are properly rendered
-          const svgs = clonedDoc.getElementsByTagName('svg');
-          Array.from(svgs).forEach(svg => {
-            // Force SVG to render by accessing its bounding box
-            svg.getBBox();
-            // Ensure SVG has explicit dimensions
-            if (!svg.getAttribute('width')) {
-              const rect = svg.getBoundingClientRect();
-              svg.setAttribute('width', rect.width.toString());
-              svg.setAttribute('height', rect.height.toString());
-            }
-          });
-
-          return Promise.all(imagePromises);
+          // Force minimum height on cloned element too
+          const clonedElement = clonedDoc.getElementById(chartRef.current?.id || 'chart');
+          if (clonedElement) {
+            clonedElement.style.minHeight = '400px';
+            clonedElement.style.display = 'block';
+          }
+          return Promise.resolve();
         }
       });
 
@@ -272,10 +122,12 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ data, fileName, child
       const imgData = canvas.toDataURL('image/png', 1.0);
       doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
       doc.save(`${fileName}.pdf`);
+      
+      // Restore original style
+      element.setAttribute('style', originalStyle);
     } catch (error) {
       console.error('Failed to generate PDF:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`Failed to generate PDF: ${errorMessage}. Please try again.`);
+      alert('Failed to generate PDF. Please try again.');
     }
   };
 

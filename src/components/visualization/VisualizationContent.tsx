@@ -1,9 +1,9 @@
 
-import ReportGenerator from './ReportGenerator';
 import React from 'react';
 import { SensorTabs } from './SensorTabs';
 import { SensorTabContent } from './SensorTabContent';
 import { SensorData, TimeRange } from './types';
+import ReportGenerator from './ReportGenerator';
 
 interface VisualizationContentProps {
   sensorData: SensorData[];
@@ -24,8 +24,18 @@ export const VisualizationContent: React.FC<VisualizationContentProps> = ({
   activeSensorTab,
   setActiveSensorTab
 }) => {
+  // Create a dataset for exporting
+  const exportableData = sensorData.flatMap(sensor => 
+    Object.entries(sensor.readings || {}).map(([date, readings]) => ({
+      sensorId: sensor.id,
+      sensorName: sensor.name,
+      date,
+      ...readings.reduce((acc, reading) => ({ ...acc, [reading.metric]: reading.value }), {})
+    }))
+  );
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" id="sensor-visualization-content">
       <SensorTabs 
         activeSensorTab={activeSensorTab}
         setActiveSensorTab={setActiveSensorTab}
@@ -40,7 +50,15 @@ export const VisualizationContent: React.FC<VisualizationContentProps> = ({
         isLoading={isLoading}
       />
       
-      <ReportGenerator data={sensorData} fileName="Sensor_Report" />
+      <ReportGenerator data={exportableData} fileName="Sensor_Report">
+        <div className="text-center text-sm text-muted-foreground">
+          {sensorData.length > 0 ? (
+            <p>Dane z {sensorData.length} czujników zostały wczytane i są gotowe do analizy.</p>
+          ) : (
+            <p>Brak danych czujników. Użyj przycisku "Dodaj plik" aby wczytać dane.</p>
+          )}
+        </div>
+      </ReportGenerator>
     </div>
   );
 };
