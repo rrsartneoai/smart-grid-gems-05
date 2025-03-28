@@ -313,7 +313,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ data, fileName, child
 
   return (
     <div>
-      <div ref={chartRef} id="chart">
+      <div ref={chartRef} id="chart" style={{ minHeight: '400px' }}>
         {children}
       </div>
       <DropdownMenu>
