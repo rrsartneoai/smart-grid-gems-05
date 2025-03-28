@@ -95,7 +95,7 @@ const VisualizationTab = () => {
         sensorId: sensor.id,
         sensorName: sensor.name,
         date,
-        ...readings.reduce((acc, reading) => ({ ...acc, [reading.metric]: reading.value }), {})
+        ...readings.reduce((acc, reading) => ({ ...acc, [reading.sensorId]: reading.value }), {})
       }))
     );
     

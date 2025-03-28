@@ -1,9 +1,9 @@
-
 export interface SensorReading {
   timestamp: Date;
   value: number;
   sensorId: string;
   status: 'Good' | 'Fair' | 'Poor' | 'Unknown';
+  metric: string;
 }
 
 export interface SensorData {
