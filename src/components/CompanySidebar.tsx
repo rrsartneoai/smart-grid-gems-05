@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -10,13 +11,21 @@ import { CompanyStoreState } from "@/types/company";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { useLocation, useNavigate } from "react-router-dom";
+import { CompanyActions } from "@/components/company/CompanyActions";
 
 export const useCompanyStore = create<CompanyStoreState>((set) => ({
+  selectedCompany: null,
   selectedCompanyId: "1",
-  setSelectedCompanyId: (id: string) => set({ selectedCompanyId: id }),
+  setSelectedCompany: (company) => set({ selectedCompany: company }),
+  setSelectedCompanyId: (id) => set({ selectedCompanyId: id }),
 }));
 
-export function CompanySidebar() {
+interface CompanySidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function CompanySidebar({ isOpen, onClose }: CompanySidebarProps) {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,27 +41,11 @@ export function CompanySidebar() {
     setCollapsed(!collapsed);
   };
 
-  const handleAddCompany = () => {
-    toast({
-      title: "Funkcja w przygotowaniu",
-      description: "Możliwość dodawania nowych firm będzie dostępna wkrótce.",
-    });
-  };
-
-  const handleOpenAssistant = () => {
-    console.log('Current hash:', currentHash);
-    console.log('Is AI Assistant visible:', isAIAssistantVisible);
-    
-    if (!isAIAssistantVisible) {
-      toast({
-        title: "Asystent AI",
-        description: "Asystent AI jest dostępny tylko w sekcjach Analiza, Status i Czujniki.",
-        variant: "destructive"
-      });
-      return;
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen && onClose) {
+      onClose();
     }
-    const event = new CustomEvent('openAssistant');
-    window.dispatchEvent(event);
   };
 
   const filteredCompanies = companiesData.filter(company => 
@@ -60,7 +53,7 @@ export function CompanySidebar() {
   );
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={isOpen !== undefined ? isOpen : open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -72,8 +65,6 @@ export function CompanySidebar() {
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0">
         <SidebarContent 
-          handleAddCompany={handleAddCompany} 
-          handleOpenAssistant={handleOpenAssistant}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredCompanies={filteredCompanies}
@@ -100,9 +91,7 @@ export function CompanySidebar() {
           )}
         </Button>
         <SidebarContent 
-          collapsed={collapsed} 
-          handleAddCompany={handleAddCompany} 
-          handleOpenAssistant={handleOpenAssistant}
+          collapsed={collapsed}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredCompanies={filteredCompanies}
@@ -116,8 +105,6 @@ export function CompanySidebar() {
 
 interface SidebarContentProps {
   collapsed?: boolean;
-  handleAddCompany: () => void;
-  handleOpenAssistant: () => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filteredCompanies: typeof companiesData;
@@ -126,62 +113,41 @@ interface SidebarContentProps {
 }
 
 function SidebarContent({ 
-  collapsed = false, 
-  handleAddCompany,
-  handleOpenAssistant,
+  collapsed = false,
   searchQuery,
   setSearchQuery,
-  filteredCompanies,
   isAIAssistantVisible,
   navigate
 }: SidebarContentProps) {
-  const { selectedCompanyId, setSelectedCompanyId } = useCompanyStore();
-
   return (
     <div className="flex h-full flex-col gap-4">
       {!collapsed && (
         <div className="p-6">
-          <h2 className="text-lg font-semibold">Firmy</h2>
+          <h2 className="text-lg font-semibold">Projekty</h2>
           <p className="text-sm text-muted-foreground">
-            Wybierz firmę do monitorowania
+            Wybierz projekt do monitorowania
           </p>
           <div className="mt-4 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Szukaj firm..."
+              placeholder="Szukaj projektów..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
             />
           </div>
+          <div className="mt-4">
+            <CompanyActions />
+          </div>
         </div>
       )}
       <ScrollArea className="flex-1">
         <div className="space-y-4 p-4">
-          {filteredCompanies.map((company) => (
-            <div key={company.id} className="space-y-4">
-              <Button
-                variant="outline"
-                className="w-full flex items-center justify-between"
-                onClick={() => setSelectedCompanyId(company.id)}
-              >
-                <span>{company.name}</span>
-              </Button>
-            </div>
-          ))}
-          <Button
-            variant="outline"
-            className={`${collapsed ? "w-10 p-2" : "w-full"} mt-2`}
-            onClick={handleAddCompany}
-          >
-            <Plus className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Dodaj firmę</span>}
-          </Button>
           <Button
             variant="outline"
             className={`mt-2 rounded ${
-    collapsed ? "w-10 p-2 bg-gray-100" : "w-full bg-[#00A36C]" // Changed background color here
-  } text-white`}
+              collapsed ? "w-10 p-2 bg-gray-100" : "w-full bg-[#00A36C]"
+            } text-white`}
             onClick={() => navigate('/assistant')}
           >
             <MessageSquare className="w-4 h-4" />

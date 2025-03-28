@@ -1,11 +1,18 @@
-import { Button } from "@/components/ui/button";
+
+import React from "react";
+import { Button } from "../ui/button";
 
 const suggestions = [
-  "Jak wygląda zużycie energii w ostatnim miesiącu?",
-  "Pokaż analizę wydajności systemu",
-  "Jakie są trendy w produkcji energii?",
-  "Wygeneruj raport z ostatniego kwartału",
-  "Porównaj wydajność między lokalizacjami"
+  "Jaki jest aktualny stan jakości powietrza?",
+  "Pokaż analizę zanieczyszczeń powietrza",
+  "Jakie są trendy w jakości powietrza?",
+  "Wygeneruj raport stanu powietrza",
+  "Porównaj jakość powietrza między lokalizacjami",
+  "Podaj dane z czujników z projektu",
+  "Pokaż wszystkie odczyty czujników",
+  "Prognoza jakości powietrza",
+  "Rekomendacje",
+  "Lista wszystkich stacji pomiarowych w okolicy"  // Replaced empty string with actual suggestion
 ];
 
 interface ChatSuggestionsProps {

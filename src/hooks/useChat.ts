@@ -1,77 +1,26 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { generateRAGResponse } from "@/utils/ragUtils";
-import { companiesData } from "@/data/companies";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-  dataVisualizations?: Array<{
-    type: "consumption" | "production" | "efficiency";
-    title: string;
-  }>;
-}
-
-const getDashboardValue = (query: string): { text: string; visualizations?: Message["dataVisualizations"] } => {
-  const lowercaseQuery = query.toLowerCase();
-  
-  // Check for visualization requests
-  if (lowercaseQuery.includes("zużycie") || lowercaseQuery.includes("zuzycie")) {
-    return {
-      text: "Oto wykres zużycia energii w czasie:",
-      visualizations: [{ type: "consumption", title: "Zużycie energii" }]
-    };
-  }
-  
-  if (lowercaseQuery.includes("produkcja")) {
-    return {
-      text: "Oto wykres produkcji energii w czasie:",
-      visualizations: [{ type: "production", title: "Produkcja energii" }]
-    };
-  }
-  
-  if (lowercaseQuery.includes("wydajność") || lowercaseQuery.includes("wydajnosc")) {
-    return {
-      text: "Oto wykres wydajności w czasie:",
-      visualizations: [{ type: "efficiency", title: "Wydajność" }]
-    };
-  }
-
-  const matchingStat = companiesData[0]?.stats.find(stat => {
-    const title = stat.title.toLowerCase();
-    return lowercaseQuery.includes(title);
-  });
-
-  if (matchingStat) {
-    return {
-      text: `${matchingStat.title}: ${matchingStat.value}${matchingStat.unit ? ' ' + matchingStat.unit : ''} (${matchingStat.description})`
-    };
-  }
-
-  return { text: "Nie znalazłem tej informacji w panelu." };
-};
+import { Message } from "@/types/chat";
+import { useQueryProcessor } from "@/hooks/chat/useQueryProcessor";
+import { useMessageState } from "@/hooks/chat/useMessageState";
 
 export const useChat = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Witaj! Jestem twoim asystentem sieci energetycznej. Jak mogę Ci pomóc?",
-      timestamp: new Date(),
-    },
-  ]);
-  const [input, setInput] = useState("");
+  const { 
+    messages, 
+    input, 
+    setInput, 
+    addUserMessage, 
+    addAssistantMessage, 
+    clearMessages 
+  } = useMessageState();
+  
   const { toast } = useToast();
+  const { processQuery } = useQueryProcessor();
 
   const clearConversation = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content: "Witaj! Jestem twoim asystentem sieci energetycznej. Jak mogę Ci pomóc?",
-        timestamp: new Date(),
-      },
-    ]);
+    clearMessages();
     toast({
       title: "Konwersacja wyczyszczona",
       description: "Historia czatu została zresetowana.",
@@ -80,27 +29,16 @@ export const useChat = () => {
 
   const { mutate: sendMessage, isPending } = useMutation({
     mutationFn: async (input: string) => {
-      const dashboardValue = getDashboardValue(input);
-      if (dashboardValue.text !== "Nie znalazłem tej informacji w panelu.") {
-        return dashboardValue;
-      }
-      const response = await generateRAGResponse(input);
-      return { text: response };
+      return await processQuery(input);
     },
     onSuccess: (response) => {
-      const newMessage = {
-        role: "assistant" as const,
-        content: response.text,
-        timestamp: new Date(),
-        dataVisualizations: response.visualizations,
-      };
-      setMessages((prev) => [...prev, newMessage]);
+      addAssistantMessage(response.text, response.visualizations);
     },
     onError: () => {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
+        title: "Błąd",
+        description: "Nie udało się uzyskać odpowiedzi. Spróbuj ponownie.",
       });
     },
   });
@@ -109,12 +47,7 @@ export const useChat = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage = {
-      role: "user" as const,
-      content: input,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, userMessage]);
+    addUserMessage(input);
     sendMessage(input);
     setInput("");
   };

@@ -1,9 +1,12 @@
+
 import * as pdfjs from 'pdfjs-dist';
 import mammoth from 'mammoth';
 import Tesseract from 'tesseract.js';
+import { parse } from 'papaparse';
+import { removeBOM } from '../components/upload/FileProcessingService';
 
 // Initialize PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 
 export const processImageFile = async (file: File): Promise<string> => {
   try {
@@ -21,7 +24,15 @@ export const processPdfFile = async (file: File): Promise<string> => {
   try {
     console.log('Rozpoczynam przetwarzanie PDF:', file.name);
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+    
+    const loadingTask = pdfjs.getDocument({
+      data: arrayBuffer,
+      isEvalSupported: false,
+      useSystemFonts: true,
+      disableFontFace: true
+    });
+    
+    const pdf = await loadingTask.promise;
     let fullText = '';
     
     console.log(`PDF ma ${pdf.numPages} stron`);
@@ -57,11 +68,108 @@ export const processDocxFile = async (file: File): Promise<string> => {
   }
 };
 
-export const ALLOWED_FILE_TYPES = [
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "image/png",
-  "image/jpeg",
-];
+export const processCsvFile = async (file: File): Promise<string> => {
+  try {
+    console.log('Rozpoczynam przetwarzanie CSV:', file.name);
+    
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (event) => {
+        try {
+          let csv = event.target?.result as string;
+          
+          if (!csv) {
+            reject(new Error('Nie udało się odczytać pliku CSV'));
+            return;
+          }
+          
+          // Remove BOM if present
+          csv = removeBOM(csv);
+          
+          console.log(`CSV content starts with: ${csv.substring(0, 100)}`);
+          
+          // Check if the file uses semicolons instead of commas
+          const firstLine = csv.split('\n')[0] || '';
+          const usesSemicolons = firstLine.includes(';');
+          const usesTabs = firstLine.includes('\t');
+          
+          let delimiter = ',';
+          if (usesSemicolons) delimiter = ';';
+          if (usesTabs) delimiter = '\t';
+          
+          console.log(`Detected delimiter: ${delimiter === '\t' ? 'tab' : delimiter}`);
+          
+          const results = parse(csv, {
+            header: true,
+            skipEmptyLines: true,
+            delimiter
+          });
+          
+          // Convert to readable text format
+          let resultText = '';
+          
+          // Add headers as a first line
+          if (results.meta.fields && results.meta.fields.length > 0) {
+            resultText += results.meta.fields.join(', ') + '\n';
+          }
+          
+          // Add data rows
+          results.data.forEach((row: any) => {
+            const values = Object.values(row).map(val => String(val || ''));
+            resultText += values.join(', ') + '\n';
+          });
+          
+          console.log('Zakończono przetwarzanie CSV, wyodrębniony tekst:', resultText.substring(0, 100) + '...');
+          resolve(resultText);
+        } catch (error) {
+          console.error('Błąd podczas parsowania CSV:', error);
+          reject(error);
+        }
+      };
+      
+      reader.onerror = () => {
+        reject(new Error('Nie udało się odczytać pliku CSV'));
+      };
+      
+      reader.readAsText(file);
+    });
+  } catch (error) {
+    console.error('Błąd podczas przetwarzania CSV:', error);
+    throw error;
+  }
+};
 
-export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+export const processTextFile = async (file: File): Promise<string> => {
+  try {
+    console.log('Rozpoczynam przetwarzanie pliku tekstowego:', file.name);
+    
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (event) => {
+        let text = event.target?.result as string;
+        
+        if (!text) {
+          reject(new Error('Nie udało się odczytać pliku tekstowego'));
+          return;
+        }
+        
+        // Remove BOM if present
+        text = removeBOM(text);
+        
+        console.log('Zakończono przetwarzanie pliku tekstowego, wyodrębniony tekst:', text.substring(0, 100) + '...');
+        resolve(text);
+      };
+      
+      reader.onerror = () => {
+        reject(new Error('Nie udało się odczytać pliku tekstowego'));
+      };
+      
+      reader.readAsText(file);
+    });
+  } catch (error) {
+    console.error('Błąd podczas przetwarzania pliku tekstowego:', error);
+    throw error;
+  }
+};

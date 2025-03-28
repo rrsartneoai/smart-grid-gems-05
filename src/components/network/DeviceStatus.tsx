@@ -29,38 +29,38 @@ interface Device {
 const mockDevices: Device[] = [
   {
     id: "tr-001",
-    name: "Transformator T1",
-    type: "transformer",
+    name: "Czujnik PM2.5/PM10",
+    type: "sensor",
     status: "operational",
     lastUpdate: "2024-01-28T12:00:00",
     metrics: {
-      load: 75,
-      temperature: 42,
+      load: 95,
+      temperature: 22,
       efficiency: 98,
     },
   },
   {
     id: "mt-001",
-    name: "Licznik L1",
+    name: "Analizator gazów",
     type: "meter",
     status: "warning",
     lastUpdate: "2024-01-28T12:00:00",
     metrics: {
       load: 85,
-      temperature: 38,
+      temperature: 24,
       efficiency: 92,
     },
   },
   {
     id: "sn-001",
-    name: "Czujnik C1",
+    name: "Stacja meteo",
     type: "sensor",
-    status: "error",
+    status: "operational",
     lastUpdate: "2024-01-28T12:00:00",
     metrics: {
-      load: 0,
-      temperature: 55,
-      efficiency: 0,
+      load: 90,
+      temperature: 21,
+      efficiency: 95,
     },
   },
 ];
@@ -103,15 +103,15 @@ export function DeviceStatus() {
     <div className="grid gap-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Status urządzeń</h2>
+          <h2 className="text-2xl font-bold">Status urządzeń Internet of Things</h2>
           <p className="text-muted-foreground">
-            Monitorowanie stanu urządzeń w sieci energetycznej
+            Monitorowanie stanu urządzeń w sieci smart grid, oraz jakości powietrza.
           </p>
         </div>
         <div className="flex gap-2">
           <Badge variant="outline" className="gap-1">
             <ServerCog className="w-4 h-4" />
-            <span>Transformatory: 1</span>
+            <span>Airthings: 1</span>
           </Badge>
           <Badge variant="outline" className="gap-1">
             <Cpu className="w-4 h-4" />

@@ -36,6 +36,12 @@ const cities = [
     name: "Słupsk",
     lat: 54.4641,
     lon: 17.0285
+  },
+  {
+    id: "ustka",
+    name: "Ustka",
+    lat: 54.5805,
+    lon: 16.8614
   }
 ];
 
@@ -136,6 +142,10 @@ export const WeatherPanel = () => {
           }
         />
 
+        {displayOptions.airQuality && airQualityData && (
+              <AirQuality data={airQualityData} />
+            )}
+
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
             <RefreshCw className="h-8 w-8 animate-spin text-primary" />
@@ -169,9 +179,7 @@ export const WeatherPanel = () => {
               />
             )}
 
-            {displayOptions.airQuality && airQualityData && (
-              <AirQuality data={airQualityData} />
-            )}
+            
 
             <WeatherSettings
               units={units}

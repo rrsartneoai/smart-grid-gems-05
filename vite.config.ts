@@ -1,32 +1,26 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
 
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+import path from 'path'
+import { componentTagger } from "lovable-tagger"
+
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
   plugins: [
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-    }
-  },
-  build: {
-    rollupOptions: {
-      external: []
+      '@': path.resolve(__dirname, './src'),
     },
-    target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
-    commonjsOptions: {
-      include: [/node_modules/]
-    }
   },
-  optimizeDeps: {
-    include: ['react-dropzone', 'pdfjs-dist/build/pdf.worker.mjs']
+  server: {
+    port: 8080,
+    allowedHosts: [
+      'localhost',
+      '101af6f5-fd22-4986-b595-90ea8b606967.lovableproject.com',
+      '.lovableproject.com'
+    ]
   }
-}));
+}))
