@@ -45,8 +45,7 @@ export const pl = {
     "minutesAgo": "minut temu",
     "back": "Powrót",
 
-    // Integrations
-    "integrations": "Integracje",
+    // Integrations Section
     "smartHome": "Smart Home",
     "energyManagement": "Zarządzanie energią",
     "zapier": "Zapier",
