@@ -32,7 +32,7 @@ export const KnowledgePanel = () => {
             </TabsList>
 
             <TabsContent value="indicators">
-              <h2 className="text-xl font-bold mb-4 my-[131px]">Podstawowe Wskaźniki Jakości Powietrza</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Podstawowe Wskaźniki Jakości Powietrza</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -100,7 +100,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="aqi">
-              <h2 className="text-xl font-bold mb-4">Indeks Jakości Powietrza (AQI)</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Indeks Jakości Powietrza (AQI)</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -161,7 +161,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="glossary">
-              <h2 className="text-xl font-bold mb-4">Słowniczek Pojęć</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Słowniczek Pojęć</h2>
               
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Wskaźniki i Parametry</h3>
@@ -219,7 +219,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="methods">
-              <h2 className="text-xl font-bold mb-4">Metody Pomiarowe</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Metody Pomiarowe</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -271,7 +271,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="prevention">
-              <h2 className="text-xl font-bold mb-4">Systemy Zapobiegania</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Systemy Zapobiegania</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -313,7 +313,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="standards">
-              <h2 className="text-xl font-bold mb-4">Standardy i Normy</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Standardy i Normy</h2>
               <ul className="list-disc pl-6 space-y-3">
                 <li className="text-base">
                   <span className="font-semibold">PN-EN 12341</span> - Metoda pomiaru PM10 i PM2.5 - Określa metody referencyjne pomiaru stężeń PM10 i PM2.5, zapewniając porównywalność danych.
@@ -331,7 +331,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="units">
-              <h2 className="text-xl font-bold mb-4">Jednostki Miar</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Jednostki Miar</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -368,7 +368,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="technical">
-              <h2 className="text-xl font-bold mb-4">Aspekty Techniczne</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Aspekty Techniczne</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -403,9 +403,8 @@ export const KnowledgePanel = () => {
               </div>
             </TabsContent>
 
-            {/* New tabs added based on user request */}
             <TabsContent value="economic">
-              <h2 className="text-xl font-bold mb-4">Aspekty Ekonomiczne</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Aspekty Ekonomiczne</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -441,7 +440,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="regulatory">
-              <h2 className="text-xl font-bold mb-4">Ramy Regulacyjne</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Ramy Regulacyjne</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -477,7 +476,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="social">
-              <h2 className="text-xl font-bold mb-4">Implikacje Społeczne</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Implikacje Społeczne</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -513,7 +512,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="risk">
-              <h2 className="text-xl font-bold mb-4">Analiza Ryzyka i Szans</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Analiza Ryzyka i Szans</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -549,7 +548,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="best-practices">
-              <h2 className="text-xl font-bold mb-4">Najlepsze Praktyki</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Najlepsze Praktyki</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -585,7 +584,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="case-studies">
-              <h2 className="text-xl font-bold mb-4">Studia Przypadków</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Studia Przypadków</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -621,7 +620,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="metrics">
-              <h2 className="text-xl font-bold mb-4">Metryki Wydajności</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Metryki Wydajności</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -657,7 +656,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="architecture">
-              <h2 className="text-xl font-bold mb-4">Architektura Sieci</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Architektura Sieci</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -693,7 +692,7 @@ export const KnowledgePanel = () => {
             </TabsContent>
 
             <TabsContent value="implementation">
-              <h2 className="text-xl font-bold mb-4">Wytyczne Wdrożeniowe</h2>
+              <h2 className="text-xl font-bold mb-4 mt-6">Wytyczne Wdrożeniowe</h2>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
