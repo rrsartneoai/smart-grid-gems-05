@@ -1,4 +1,4 @@
-# Smart Grid & Air Quality Dashboard - Instrukcja obsługi
+# Smart Grid & Air Quality Dashboard - Instrukcja obsługi.
 
 Cel repozytorium
 
