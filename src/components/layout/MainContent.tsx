@@ -8,6 +8,8 @@ import { PomeranianAirQuality } from "@/components/pomerania/PomeranianAirQualit
 import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { SpacesTab, VisualizationTab } from "@/components/tabs";
 import { useTranslation } from 'react-i18next';
+import { KnowledgePanel } from "@/components/knowledge/KnowledgePanel";
+import { BookOpen } from "lucide-react";
 
 interface MainContentProps {
   isMobileMenuOpen: boolean;
@@ -33,6 +35,10 @@ export function MainContent({ isMobileMenuOpen }: MainContentProps) {
             <TabsTrigger value="status">{t('status')}</TabsTrigger>
             <TabsTrigger value="sensors">{t('sensors')}</TabsTrigger>
             <TabsTrigger value="integrations">{t('integrations')}</TabsTrigger>
+            <TabsTrigger value="knowledge" className="flex items-center gap-1">
+              <BookOpen className="w-4 h-4" />
+              Wiedza
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="spaces" className="space-y-6">
@@ -61,6 +67,10 @@ export function MainContent({ isMobileMenuOpen }: MainContentProps) {
 
           <TabsContent value="integrations">
             <IntegrationsPanel />
+          </TabsContent>
+          
+          <TabsContent value="knowledge">
+            <KnowledgePanel />
           </TabsContent>
         </Tabs>
       </motion.div>

@@ -1,3 +1,4 @@
+
 export const pl = {
   translation: {
     // General
@@ -17,6 +18,8 @@ export const pl = {
     "analysis": "Analiza",
     "status": "Status",
     "sensors": "Czujniki",
+    "integrations": "Integracje",
+    "knowledge": "Wiedza",
     
     // IoT Status
     "iotStatus": "Status IoT",
