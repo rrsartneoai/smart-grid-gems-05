@@ -26,12 +26,22 @@ export default defineConfig({
         // Add jsdom options if needed
       }
     },
-    // Ensure proper handling of environment variables
-    env: process.env,
+    // Handle environment variables properly for tests
+    env: {
+      ...process.env,
+      // Add any test-specific environment variables here
+      VITE_TEST_MODE: 'true',
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Define environment variables for development and testing
+  define: {
+    // Safely stringify environment variables to prevent syntax errors
+    'import.meta.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || 'test-api-key'),
+    'import.meta.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'test-api-key'),
+  }
 });
