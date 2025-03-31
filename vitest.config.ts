@@ -21,6 +21,13 @@ export default defineConfig({
       ],
     },
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    environmentOptions: {
+      jsdom: {
+        // Add jsdom options if needed
+      }
+    },
+    // Ensure proper handling of environment variables
+    env: process.env,
   },
   resolve: {
     alias: {

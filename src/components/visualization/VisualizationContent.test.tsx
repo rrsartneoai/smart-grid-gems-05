@@ -18,14 +18,14 @@ const mockSensorData = [
           sensorId: 'Temp', 
           value: 22.5, 
           timestamp: new Date('2023-01-01T12:00:00Z'),
-          status: 'Good',
+          status: 'Good' as const,
           metric: '°C'
         },
         { 
           sensorId: 'Temp', 
           value: 23.1, 
           timestamp: new Date('2023-01-01T13:00:00Z'),
-          status: 'Good',
+          status: 'Good' as const,
           metric: '°C'
         }
       ],
@@ -34,14 +34,14 @@ const mockSensorData = [
           sensorId: 'PM10', 
           value: 21.8, 
           timestamp: new Date('2023-01-02T12:00:00Z'),
-          status: 'Fair',
+          status: 'Fair' as const,
           metric: 'µg/m³'
         },
         { 
           sensorId: 'PM10', 
           value: 22.4, 
           timestamp: new Date('2023-01-02T13:00:00Z'),
-          status: 'Fair',
+          status: 'Fair' as const,
           metric: 'µg/m³'
         }
       ]
