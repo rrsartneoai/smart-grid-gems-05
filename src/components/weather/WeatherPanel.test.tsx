@@ -72,15 +72,16 @@ describe('WeatherPanel', () => {
   });
 
   it('allows changing the city', async () => {
+    const user = userEvent.setup();
     render(<WeatherPanel />);
     
     // Open city selector dropdown
     const citySelector = screen.getByRole('combobox');
-    await userEvent.click(citySelector);
+    await user.click(citySelector);
     
     // Select Gdynia
     const gdyniaOption = screen.getByRole('option', { name: /Gdynia/i });
-    await userEvent.click(gdyniaOption);
+    await user.click(gdyniaOption);
     
     // Check if the city has changed (the city name isn't directly displayed in the UI,
     // but we can check if the component didn't crash)

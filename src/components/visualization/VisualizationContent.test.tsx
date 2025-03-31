@@ -5,34 +5,58 @@ import userEvent from '@testing-library/user-event';
 import { render } from '../../test/test-utils';
 import { VisualizationContent } from './VisualizationContent';
 
-// Mock sensor data
+// Mock sensor data that correctly implements the SensorData interface
 const mockSensorData = [
   {
     id: 'sensor1',
     name: 'Temperature Sensor',
-    type: 'temperature',
-    unit: '°C',
+    lastSynced: new Date('2023-01-02T14:00:00Z'),
+    signalStrength: 85,
     readings: {
-      '2023-01-01': [
-        { sensorId: 'temperature', value: 22.5, timestamp: '2023-01-01T12:00:00Z' },
-        { sensorId: 'temperature', value: 23.1, timestamp: '2023-01-01T13:00:00Z' }
+      'Temp': [
+        { 
+          sensorId: 'Temp', 
+          value: 22.5, 
+          timestamp: new Date('2023-01-01T12:00:00Z'),
+          status: 'Good',
+          metric: '°C'
+        },
+        { 
+          sensorId: 'Temp', 
+          value: 23.1, 
+          timestamp: new Date('2023-01-01T13:00:00Z'),
+          status: 'Good',
+          metric: '°C'
+        }
       ],
-      '2023-01-02': [
-        { sensorId: 'temperature', value: 21.8, timestamp: '2023-01-02T12:00:00Z' },
-        { sensorId: 'temperature', value: 22.4, timestamp: '2023-01-02T13:00:00Z' }
+      'PM10': [
+        { 
+          sensorId: 'PM10', 
+          value: 21.8, 
+          timestamp: new Date('2023-01-02T12:00:00Z'),
+          status: 'Fair',
+          metric: 'µg/m³'
+        },
+        { 
+          sensorId: 'PM10', 
+          value: 22.4, 
+          timestamp: new Date('2023-01-02T13:00:00Z'),
+          status: 'Fair',
+          metric: 'µg/m³'
+        }
       ]
     }
   }
 ];
 
-// Mock props
+// Mock props that match the component interface
 const mockProps = {
   sensorData: mockSensorData,
-  selectedTimeRange: { start: '2023-01-01', end: '2023-01-02' },
-  selectedSensors: ['sensor1'],
+  selectedTimeRange: 'month',
+  selectedSensors: ['Temp', 'PM10'],
   onSensorSelection: vi.fn(),
   isLoading: false,
-  activeSensorTab: 'sensor1',
+  activeSensorTab: 'PM10',
   setActiveSensorTab: vi.fn(),
   onAddSensor: vi.fn()
 };
@@ -61,11 +85,12 @@ describe('VisualizationContent Integration', () => {
   });
 
   it('opens report modal when generate report button is clicked', async () => {
+    const user = userEvent.setup();
     render(<VisualizationContent {...mockProps} />);
     
     // Click the generate report button
     const reportButton = screen.getByRole('button', { name: /Generuj raport/i });
-    await userEvent.click(reportButton);
+    await user.click(reportButton);
     
     // Wait for the modal to appear
     await waitFor(() => {
@@ -74,11 +99,12 @@ describe('VisualizationContent Integration', () => {
   });
 
   it('calls onAddSensor when add sensor button is clicked', async () => {
+    const user = userEvent.setup();
     render(<VisualizationContent {...mockProps} />);
     
     // Click the add sensor button
     const addButton = screen.getByRole('button', { name: /Dodaj kolejny sensor/i });
-    await userEvent.click(addButton);
+    await user.click(addButton);
     
     // Check if onAddSensor was called
     expect(mockProps.onAddSensor).toHaveBeenCalled();
