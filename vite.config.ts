@@ -30,10 +30,12 @@ export default defineConfig(({ mode }) => ({
   define: {
     // Properly stringify all environment variables
     '__WS_TOKEN__': JSON.stringify(process.env.VITE_WS_TOKEN || 'development'),
-    'process.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || '0716b08049f481eef218a1c51660a5e3'),
-    'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ'),
-    'process.env.VITE_AQICN_TOKEN': JSON.stringify(process.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6'),
-    'process.env.VITE_ELEVENLABS_API_KEY': JSON.stringify(process.env.VITE_ELEVENLABS_API_KEY || ''),
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || mode),
+    'process.env': {
+      VITE_OPENWEATHER_API_KEY: JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || '0716b08049f481eef218a1c51660a5e3'),
+      VITE_GOOGLE_API_KEY: JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ'),
+      VITE_AQICN_TOKEN: JSON.stringify(process.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6'),
+      VITE_ELEVENLABS_API_KEY: JSON.stringify(process.env.VITE_ELEVENLABS_API_KEY || ''),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || mode),
+    }
   },
 }))
