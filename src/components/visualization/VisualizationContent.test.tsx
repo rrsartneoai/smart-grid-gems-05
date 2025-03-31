@@ -4,6 +4,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from '../../test/test-utils';
 import { VisualizationContent } from './VisualizationContent';
+import { TimeRange } from './types';
 
 // Mock sensor data that correctly implements the SensorData interface
 const mockSensorData = [
@@ -49,10 +50,13 @@ const mockSensorData = [
   }
 ];
 
+// Ensure selectedTimeRange matches the TimeRange type
+const selectedTimeRange: TimeRange = 'month';
+
 // Mock props that match the component interface
 const mockProps = {
   sensorData: mockSensorData,
-  selectedTimeRange: 'month',
+  selectedTimeRange,
   selectedSensors: ['Temp', 'PM10'],
   onSensorSelection: vi.fn(),
   isLoading: false,
