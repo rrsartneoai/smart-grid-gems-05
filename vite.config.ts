@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => ({
     }
   },
   define: {
-    // Properly stringify all environment variables to prevent syntax errors
+    // Properly stringify all environment variables
     '__WS_TOKEN__': JSON.stringify(process.env.VITE_WS_TOKEN || 'development'),
     'process.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || '0716b08049f481eef218a1c51660a5e3'),
     'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ'),
@@ -36,5 +36,4 @@ export default defineConfig(({ mode }) => ({
     'process.env.VITE_ELEVENLABS_API_KEY': JSON.stringify(process.env.VITE_ELEVENLABS_API_KEY || ''),
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || mode),
   },
-  envPrefix: ['VITE_'],
 }))

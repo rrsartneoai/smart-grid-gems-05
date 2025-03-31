@@ -26,12 +26,6 @@ export default defineConfig({
         // Add jsdom options if needed
       }
     },
-    // Handle environment variables properly for tests
-    env: {
-      ...process.env,
-      // Add any test-specific environment variables here
-      VITE_TEST_MODE: 'true',
-    },
   },
   resolve: {
     alias: {

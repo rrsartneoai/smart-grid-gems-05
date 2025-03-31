@@ -3,10 +3,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { toast } from "@/hooks/use-toast";
 
 // Użyj klucza API z zmiennej środowiskowej lub użyj domyślnego
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || "AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ";
+const API_KEY = process.env.VITE_GOOGLE_API_KEY || "AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ";
 
 // Sprawdź czy klucz API jest dostępny, ale nie wyświetlaj błędu, jeśli użyto wartości domyślnej
-if (!import.meta.env.VITE_GOOGLE_API_KEY) {
+if (!process.env.VITE_GOOGLE_API_KEY) {
   console.warn("Używam domyślnego klucza API dla Gemini. Zalecane jest dodanie własnego klucza poprzez VITE_GOOGLE_API_KEY.");
 }
 

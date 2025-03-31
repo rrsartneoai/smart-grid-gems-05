@@ -61,7 +61,7 @@ export const WeatherPanel = () => {
     queryKey: ['weather', selectedCity.id, units],
     queryFn: async () => {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=${units}&lang=pl`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${process.env.VITE_OPENWEATHER_API_KEY}&units=${units}&lang=pl`
       );
       if (!response.ok) {
         throw new Error(t("weatherDataError"));
@@ -75,7 +75,7 @@ export const WeatherPanel = () => {
     queryKey: ['forecast', selectedCity.id, units],
     queryFn: async () => {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=${units}&lang=pl`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${process.env.VITE_OPENWEATHER_API_KEY}&units=${units}&lang=pl`
       );
       if (!response.ok) {
         throw new Error(t("forecastDataError"));
@@ -89,7 +89,7 @@ export const WeatherPanel = () => {
     queryKey: ['airQuality', selectedCity.id],
     queryFn: async () => {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}`
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${selectedCity.lat}&lon=${selectedCity.lon}&appid=${process.env.VITE_OPENWEATHER_API_KEY}`
       );
       if (!response.ok) {
         throw new Error(t("airQualityError"));
