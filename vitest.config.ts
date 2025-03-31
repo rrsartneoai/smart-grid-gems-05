@@ -40,8 +40,9 @@ export default defineConfig({
   },
   // Define environment variables for development and testing
   define: {
-    // Safely stringify environment variables to prevent syntax errors
-    'import.meta.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || 'test-api-key'),
-    'import.meta.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'test-api-key'),
+    // Use process.env instead of import.meta.env to avoid client-side issues
+    'process.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || 'test-api-key'),
+    'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'test-api-key'),
+    'process.env.VITE_AQICN_TOKEN': JSON.stringify(process.env.VITE_AQICN_TOKEN || 'test-api-key'),
   }
 });

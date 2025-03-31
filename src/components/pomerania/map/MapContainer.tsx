@@ -76,7 +76,7 @@ export function MapContainer() {
 
     try {
       setIsLoading(true);
-      const AQICN_TOKEN = import.meta.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6';
+      const AQICN_TOKEN = process.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6';
       const stations = [
         { id: '@2677', name: 'Gdańsk-Jasień' },
         { id: '@2685', name: 'Gdańsk-Stogi' },
@@ -237,7 +237,7 @@ export function MapContainer() {
 export default MapContainer;
 
 export const fetchAirlyData = async (): Promise<SensorData[]> => {
-  const AIRLY_API_KEY = import.meta.env.VITE_AIRLY_API_KEY;
+  const AIRLY_API_KEY = process.env.VITE_AIRLY_API_KEY;
   if (!AIRLY_API_KEY) return [];
   
   try {
@@ -356,7 +356,7 @@ export const fetchGIOSData = async (): Promise<SensorData[]> => {
 };
 
 export const fetchAQICNData = async (): Promise<SensorData[]> => {
-  const AQICN_TOKEN = '5a1271b20fbbb9c972814a7b8d31512e061e83e6';
+  const AQICN_TOKEN = process.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6';
   const stations = [
     { id: '@237496', name: 'Gdańsk Wrzeszcz' },
     { id: '@62983', name: 'Gdynia' },

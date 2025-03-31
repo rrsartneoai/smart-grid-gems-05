@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button"; // Added this import
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { EUROPEAN_COUNTRIES } from "./constants";

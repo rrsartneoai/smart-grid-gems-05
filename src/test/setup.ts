@@ -10,15 +10,16 @@ afterEach(() => {
 });
 
 // Setup mock environment variables for tests
-if (import.meta.env) {
-  // Make sure critical environment variables exist for tests
-  if (!import.meta.env.VITE_OPENWEATHER_API_KEY) {
-    import.meta.env.VITE_OPENWEATHER_API_KEY = 'test-api-key';
-  }
-  
-  if (!import.meta.env.VITE_GOOGLE_API_KEY) {
-    import.meta.env.VITE_GOOGLE_API_KEY = 'test-api-key';
-  }
+if (!process.env.VITE_OPENWEATHER_API_KEY) {
+  process.env.VITE_OPENWEATHER_API_KEY = 'test-api-key';
+}
+
+if (!process.env.VITE_GOOGLE_API_KEY) {
+  process.env.VITE_GOOGLE_API_KEY = 'test-api-key';
+}
+
+if (!process.env.VITE_AQICN_TOKEN) {
+  process.env.VITE_AQICN_TOKEN = 'test-api-key';
 }
 
 // Run environment verification in non-production environments only

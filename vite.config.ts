@@ -28,11 +28,12 @@ export default defineConfig(({ mode }) => ({
     }
   },
   define: {
-    // Ensure environment variables are properly stringified to prevent syntax errors
+    // Explicitly define environment variables as JSON strings to prevent syntax errors
     __WS_TOKEN__: JSON.stringify(process.env.VITE_WS_TOKEN || 'development'),
-    'import.meta.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || '0716b08049f481eef218a1c51660a5e3'),
-    'import.meta.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ'),
+    'process.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || '0716b08049f481eef218a1c51660a5e3'),
+    'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'AIzaSyBicTIEjL3cvBSFUhlRX3vmMQZlqLXc0AQ'),
+    'process.env.VITE_AQICN_TOKEN': JSON.stringify(process.env.VITE_AQICN_TOKEN || '5a1271b20fbbb9c972814a7b8d31512e061e83e6'),
+    // Change from import.meta.env to process.env to avoid the client-side issue
   },
-  // Add extra handling for environment variables
   envPrefix: ['VITE_'],
 }))
