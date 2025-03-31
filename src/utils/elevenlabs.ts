@@ -1,5 +1,6 @@
+
 export const getElevenLabsConfig = () => {
-  const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+  const apiKey = process.env.VITE_ELEVENLABS_API_KEY;
   
   if (!apiKey) {
     console.warn('Brak klucza API ElevenLabs - funkcja odtwarzania głosowego nie będzie działać bez klucza');

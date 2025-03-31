@@ -38,11 +38,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Define environment variables for development and testing
+  // Define environment variables for development and testing with proper JSON.stringify
   define: {
-    // Use process.env instead of import.meta.env to avoid client-side issues
     'process.env.VITE_OPENWEATHER_API_KEY': JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY || 'test-api-key'),
     'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY || 'test-api-key'),
     'process.env.VITE_AQICN_TOKEN': JSON.stringify(process.env.VITE_AQICN_TOKEN || 'test-api-key'),
+    'process.env.VITE_ELEVENLABS_API_KEY': JSON.stringify(process.env.VITE_ELEVENLABS_API_KEY || ''),
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'test'),
   }
 });
